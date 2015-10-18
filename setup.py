@@ -1,0 +1,39 @@
+from setuptools import find_packages
+from setuptools import setup
+
+
+setup(
+    name='caravan',
+    version='0.0.1.dev0',
+    description='Light python framework for AWS SWF',
+    long_description=open('README.rst').read(),
+    keywords='AWS SWF workflow distributed background task',
+    author='Pior Bastida',
+    author_email='pior@pbastida.net',
+    url='https://github.com/pior/caravan',
+    license='GPLv3+',
+    packages=find_packages(),
+    # include_package_data=True,
+    # zip_safe=False,
+    install_requires=['boto3'],
+    # extras_require={
+    #     'docs': ['sphinx', 'sphinx_rtd_theme'],
+    #     },
+    entry_points={
+        "console_scripts": [
+            "caravan-decider = caravan.commands.decider:main",
+            "caravan-start = caravan.commands.start:main",
+            "caravan-signal = caravan.commands.signal:main",
+            ]
+        },
+    classifiers=[
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)"
+        "Operating System :: OS Independent",
+        "Topic :: Internet",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.5"
+        ],
+    )
