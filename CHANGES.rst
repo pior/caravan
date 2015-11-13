@@ -5,7 +5,7 @@ Changelog
 0.0.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- First release on Pypi
 
 
 0.0.1 (unreleased)
