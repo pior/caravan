@@ -11,14 +11,13 @@ setup(
     author='Pior Bastida',
     author_email='pior@pbastida.net',
     url='https://github.com/pior/caravan',
-    license='GPLv3+',
+    license='MIT',
     packages=find_packages(),
-    # include_package_data=True,
-    # zip_safe=False,
+    zip_safe=False,
     install_requires=['boto3'],
-    # extras_require={
-    #     'docs': ['sphinx', 'sphinx_rtd_theme'],
-    #     },
+    extras_require={
+        'dev': ['zest.releaser[recommended]'],
+        },
     entry_points={
         "console_scripts": [
             "caravan-decider = caravan.commands.decider:Command.main",
@@ -29,11 +28,11 @@ setup(
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)"
+        "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Topic :: Internet",
         "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3.4",
-        "Programming Language :: Python :: 3.5"
+        # "Programming Language :: Python :: 3.4",
+        # "Programming Language :: Python :: 3.5"
         ],
     )

@@ -37,6 +37,12 @@ Ruby:
 
 - AWS Flow: https://github.com/aws/aws-flow-ruby
 
+Development
+===========
+
+    $ git clone git@github.com:pior/caravan.git
+    $ pip install -e .[dev]
+
 License
 =======
 
