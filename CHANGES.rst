@@ -2,7 +2,7 @@
 Changelog
 =========
 
-0.0.2 (unreleased)
+0.0.2 (2015-11-12)
 ------------------
 
 - First release on Pypi
