@@ -7,20 +7,22 @@ Caravan
 Project
 =======
 
-- Code: https://github.com/pior/caravan
-
+- `Code on Github <https://github.com/pior/caravan>`_
+- Doc: ``TODO``
+- Tests: ``TODO``
 
 Focus of this project
 =====================
 
-Similar projects exists, Simpleflow seems mature. Here is where Caravan differs from existing projects:
+Similar projects exists (like Simpleflow which seems mature).
+Here is where Caravan differs from existing projects:
 
 - Support of AWS Lambda tasks
 - Boto3
-- As light as possible
-- No opinion on the way the workflow is expressed
+- KISS
+- Workflow expressed as simple callable
+- Contribs for higher level workflow framework
 - No coupling between Decider code and Activity code
-
 
 Similar projects
 ================
@@ -35,8 +37,9 @@ Ruby:
 
 - AWS Flow: https://github.com/aws/aws-flow-ruby
 
-
 License
 =======
 
-MIT licensed. See the bundled `LICENSE <https://github.com/botify-labs/simpleflow/blob/master/LICENSE>`_ file for more details
+MIT licensed. See the bundled
+`LICENSE <https://github.com/pior/caravan/blob/master/LICENSE>`_
+file for more details
