@@ -15,7 +15,7 @@ class Command(BaseCommand):
         parser.add_argument('-i', '--id', required=True)
         parser.add_argument('-n', '--name', required=True)
         parser.add_argument('-v', '--version', required=True)
-        parser.add_argument('-t', '--task-list', required=True)
+        parser.add_argument('-t', '--task-list')
 
         parser.add_argument(
             '--input',
@@ -41,22 +41,21 @@ class Command(BaseCommand):
     def run(self):
         connection = get_swf_connection()
 
-        callargs = {
-            'taskList': {'name': self.args.task_list},
-            }
-
+        args = {}
         if self.args.input:
-            callargs['input'] = self.args.input
+            args['input'] = self.args.input
+        if self.args.task_list:
+            args['task_list'] = self.args.task_list
         if self.args.tag_list:
-            callargs['tagList'] = self.args.tag_list.split()
+            args['tagList'] = self.args.tag_list.split()
         if self.args.execution_timeout:
-            callargs['executionStartToCloseTimeout'] = self.args.execution_timeout
+            args['executionStartToCloseTimeout'] = self.args.execution_timeout
         if self.args.task_timeout:
-            callargs['taskStartToCloseTimeout'] = self.args.task_timeout
+            args['taskStartToCloseTimeout'] = self.args.task_timeout
         if self.args.child_policy:
-            callargs['childPolicy'] = self.args.child_policy
+            args['childPolicy'] = self.args.child_policy
         if self.args.lambda_role:
-            callargs['lambdaRole'] = self.args.lambda_role
+            args['lambdaRole'] = self.args.lambda_role
 
         try:
             response = connection.start_workflow_execution(
@@ -66,7 +65,7 @@ class Command(BaseCommand):
                     'name': self.args.name,
                     'version': self.args.version
                     },
-                **callargs)
+                **args)
         except ClientError as err:
             sys.exit(err)
         else:
