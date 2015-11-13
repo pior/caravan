@@ -8,6 +8,7 @@ Project
 =======
 
 - `Code on Github <https://github.com/pior/caravan>`_
+- `PyPi <https://pypi.python.org/pypi/caravan>`_
 - Doc: ``TODO``
 - Tests: ``TODO``
 
@@ -20,9 +21,14 @@ Here is where Caravan differs from existing projects:
 - Support of AWS Lambda tasks
 - Boto3
 - KISS
-- Workflow expressed as simple callable
-- Contribs for higher level workflow framework
+- Bring your own workflow framework (standard implementations as contribs)
 - No coupling between Decider code and Activity code
+- Paster compatible config file
+
+Usage
+=====
+
+``TODO``
 
 Similar projects
 ================
@@ -45,6 +51,10 @@ Clone and install development dependencies::
     $ git clone git@github.com:pior/caravan.git
     $ cd caravan
     $ pip install -e .[dev]
+
+Run tests:
+
+``TODO``
 
 License
 =======
