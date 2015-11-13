@@ -40,7 +40,10 @@ Ruby:
 Development
 ===========
 
+Clone and install development dependencies::
+
     $ git clone git@github.com:pior/caravan.git
+    $ cd caravan
     $ pip install -e .[dev]
 
 License
