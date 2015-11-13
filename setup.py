@@ -21,9 +21,9 @@ setup(
     #     },
     entry_points={
         "console_scripts": [
-            "caravan-decider = caravan.commands.decider:main",
-            "caravan-start = caravan.commands.start:main",
-            "caravan-signal = caravan.commands.signal:main",
+            "caravan-decider = caravan.commands.decider:Command.main",
+            "caravan-start = caravan.commands.start:Command.main",
+            "caravan-signal = caravan.commands.signal:Command.main",
             ]
         },
     classifiers=[

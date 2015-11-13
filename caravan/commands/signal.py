@@ -1,41 +1,46 @@
 import sys
-import argparse
 
-import botocore.exceptions
+from botocore.exceptions import ClientError
 
-from caravan.commands import get_swf_connection, is_response_success
+from caravan.swf import get_swf_connection, is_response_success
+from caravan.commands import BaseCommand
 
 
-def main():
-    parser = argparse.ArgumentParser(description='Signal a workflow execution')
-    parser.add_argument('-d', '--domain', required=True)
-    parser.add_argument('-i', '--id', required=True)
-    parser.add_argument('--run-id')
-    parser.add_argument('-s', '--signal', required=True)
-    parser.add_argument('--input', help='Raw input data for this signal')
-    args = parser.parse_args()
+class Command(BaseCommand):
 
-    connection = get_swf_connection()
+    description = 'Signal a workflow execution'
 
-    callargs = {}
-    if args.input:
-        callargs['input'] = args.input
-    if args.run_id:
-        callargs['runId'] = args.run_id
+    def setup_arguments(self, parser):
 
-    try:
-        response = connection.signal_workflow_execution(
-            domain=args.domain,
-            workflowId=args.id,
-            signalName=args.signal,
-            **callargs
-            )
-    except botocore.exceptions.ClientError as err:
-        sys.exit(err)
-    except KeyboardInterrupt:
-        sys.exit(1)
-    else:
-        if is_response_success(response):
-            print 'Signal successfully sent'
+        parser.add_argument('-d', '--domain', required=True)
+        parser.add_argument('-i', '--id', required=True)
+        parser.add_argument('--run-id')
+        parser.add_argument('-s', '--signal', required=True)
+        parser.add_argument(
+            '--input',
+            help='Raw input data for this signal',
+            metavar='"<Some data>"')
+
+    def run(self):
+        connection = get_swf_connection()
+
+        callargs = {}
+        if self.args.input:
+            callargs['input'] = self.args.input
+        if self.args.run_id:
+            callargs['runId'] = self.args.run_id
+
+        try:
+            response = connection.signal_workflow_execution(
+                domain=self.args.domain,
+                workflowId=self.args.id,
+                signalName=self.args.signal,
+                **callargs
+                )
+        except ClientError as err:
+            sys.exit(err)
         else:
-            print 'Response: %s' % response
+            if is_response_success(response):
+                print 'Signal successfully sent'
+            else:
+                sys.exit('Error: %s' % response)
