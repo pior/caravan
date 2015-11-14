@@ -3,7 +3,8 @@ import logging
 from botocore.exceptions import ClientError
 
 from caravan import Workflow
-from caravan.commands import BaseCommand, ClassesLoaderFromModule
+from caravan.commands.base import BaseCommand
+from caravan.commands import ClassesLoaderFromModule
 from caravan.swf import get_swf_connection
 from caravan.workers.decider import Worker
 

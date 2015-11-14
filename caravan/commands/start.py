@@ -3,7 +3,7 @@ import sys
 from botocore.exceptions import ClientError
 
 from caravan.swf import get_swf_connection, is_response_success
-from caravan.commands import BaseCommand
+from caravan.commands.base import BaseCommand
 
 
 class Command(BaseCommand):
