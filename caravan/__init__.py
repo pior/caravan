@@ -1,9 +1,3 @@
+from caravan.models.workflow import Workflow
 
-
-class Workflow(object):
-    """Represent the implementation of a workflow."""
-
-    name = None
-    version = None
-    description = None
-    defaults = {}
+__all__ = ['Workflow']

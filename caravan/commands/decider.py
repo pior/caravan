@@ -4,8 +4,7 @@ from botocore.exceptions import ClientError
 
 from caravan import Workflow
 from caravan.commands.base import BaseCommand
-from caravan.commands import ClassesLoaderFromModule
-from caravan.swf import get_swf_connection
+from caravan.commands import ClassesLoaderFromModule, get_swf_connection
 from caravan.workers.decider import Worker
 
 
@@ -40,7 +39,8 @@ class Command(BaseCommand):
                 if created:
                     log.info("Workflow type %s: registered.", workflow.name)
                 else:
-                    log.info("Workflow type %s: already registered.", workflow.name)
+                    log.info("Workflow type %s: already registered.",
+                             workflow.name)
 
         log.info("Start decider worker...")
         worker = Worker(connection=connection,

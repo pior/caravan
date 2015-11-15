@@ -25,10 +25,42 @@ Here is where Caravan differs from existing projects:
 - No coupling between Decider code and Activity code
 - Paster compatible config file
 
+Features
+========
+
+- Decider worker
+- Activity task worker
+- Commands to start/signal an arbitrary workflow execution
+- Command to list workflow execution
+- Command to register a domain
+
 Usage
 =====
 
-``TODO``
+Setup a SWF for the example::
+
+    $ caravan-domain-register -n CaravanExample --retention-days 1
+
+List execution for last 24h::
+
+    $ caravan-list -d CaravanExample
+
+List execution for year 2015::
+
+
+
+Timer example
+-------------
+    $ caravan-list -d CaravanExample --oldest 2015-01-01
+
+Run the decider::
+
+    $ caravan-decider -d CaravanExample -m caravan.examples.timer.workflow -t default
+
+Start an execution::
+
+    $ caravan-start -d CaravanExample -n TimerExample -v 0.1 -i 1
+
 
 Similar projects
 ================

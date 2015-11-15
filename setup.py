@@ -14,15 +14,22 @@ setup(
     license='MIT',
     packages=find_packages(),
     zip_safe=False,
-    install_requires=['boto3'],
+    install_requires=[
+        'boto3',
+        'arrow',
+        'six',
+        'tabulate',
+        ],
     extras_require={
         'dev': ['zest.releaser[recommended]'],
         },
     entry_points={
-        "console_scripts": [
-            "caravan-decider = caravan.commands.decider:Command.main",
-            "caravan-start = caravan.commands.start:Command.main",
-            "caravan-signal = caravan.commands.signal:Command.main",
+        'console_scripts': [
+            'caravan-decider = caravan.commands.decider:Command.main',
+            'caravan-start = caravan.commands.start:Command.main',
+            'caravan-signal = caravan.commands.signal:Command.main',
+            'caravan-list = caravan.commands.list:Command.main',
+            'caravan-domain-register = caravan.commands.domain_register:Command.main',
             ]
         },
     classifiers=[

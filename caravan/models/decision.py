@@ -1,16 +1,22 @@
+import pprint
 
 
 def normalize_attribute_key(payload):
     key = [k for k in payload.keys() if k.endswith("Attributes")][0]
     payload['attributes'] = payload.pop(key)
+    return payload
+
+
+class DecisionDone(BaseException):
+    pass
 
 
 class DecisionTask(object):
 
     def __init__(self, data):
-        self.token = data['taskToken']
-        self.events = data['events']
+        self.events = [normalize_attribute_key(e) for e in data['events']]
 
+        self.token = data['taskToken']
         self.workflow_id = data['workflowExecution']['workflowId']
         self.run_id = data['workflowExecution']['runId']
         self.workflow_type = data['workflowType']['name']
@@ -19,26 +25,18 @@ class DecisionTask(object):
         self.decisions = []
 
     def __repr__(self):
-        return '<DecisionTask %s v=%s id=%s>' % (self.workflow_type,
-                                                 self.workflow_version,
-                                                 self.workflow_id)
+        return '<DecisionTask %s v=%s id=%s runId=%s>' % (
+            self.workflow_type,
+            self.workflow_version,
+            self.workflow_id,
+            self.run_id)
 
-    @property
-    def workflow_input(self):
-        execution_event = self.last_event_type("WorkflowExecutionStarted")
-        return execution_event['attributes'].get('input')
-
-    def has_event_type(self, event_type):
-        return bool(self.last_event_type(event_type))
-
-    def last_event_type(self, event_type):
-        events = [e for e in self.events if e['eventType'] == event_type]
-        if events:
-            event = events[-1]
-            normalize_attribute_key(event)
-            return event
-        else:
-            return None
+    def print_events(self):
+        for e in self.events:
+            if 'Decision' in e['eventType']:
+                continue
+            print "==== %3i %s" % (e['eventId'], e['eventType'])
+            pprint.pprint(e['attributes'])
 
     def add_decision(self, decision_type, **attributes):
         attribute_name = '%s%sDecisionAttributes' % (decision_type[0].lower(),
@@ -48,3 +46,6 @@ class DecisionTask(object):
             attribute_name: attributes,
         }
         self.decisions.append(decision_payload)
+
+    def decision_done(self, msg='-'):
+        raise DecisionDone('Decision Done: %s' % msg)

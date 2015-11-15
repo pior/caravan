@@ -1,8 +1,10 @@
 import logging
 import pprint
 
+from botocore.exceptions import ClientError
+
 from caravan.workers import get_default_identity
-from caravan.models import DecisionTask
+from caravan.models.decision import DecisionTask, DecisionDone
 
 log = logging.getLogger(__name__)
 
@@ -13,56 +15,64 @@ class Worker(object):
         self.conn = connection
         self.domain = domain
         self.task_list = task_list
-        self.workflows = {w.name: w for w in workflows}
+        self.Workflows = {(w.name, w.version): w for w in workflows}
         self.identity = get_default_identity()
 
-    def poll_swf(self):
-        """Poll SWF for a decision task. Only return once actually get one."""
+    def run(self):
+        log.info('Waiting for a decision task...')
+        task = self.poll()
+        if task:
+            log.info('Got a %r', task)
+            self.decide(task)
+
+            log.info('Respond with decisions: %s', task.decisions)
+            self.respond_decision(task)
+
+    def poll(self):
         task_list = dict(name=self.task_list)
 
-        while True:
-            resp = self.conn.poll_for_decision_task(domain=self.domain,
-                                                    taskList=task_list,
-                                                    identity=self.identity)
+        resp = self.conn.poll_for_decision_task(domain=self.domain,
+                                                taskList=task_list,
+                                                identity=self.identity)
+        if 'taskToken' not in resp:
+            return  # Polling timed out.
 
-            task_token = resp.get('taskToken')
-            if task_token:
-                next_page_token = resp.get('nextPageToken')
-                while next_page_token:
-                    page = self.conn.poll_for_decision_task(
-                        domain=self.domain,
-                        taskList=task_list,
-                        identity=self.identity,
-                        nextPageToken=next_page_token)
-                    next_page_token = page.get('nextPageToken')
-                    resp['events'].extend(page['events'])
+        next_page_token = resp.get('nextPageToken')
+        while next_page_token:
+            page = self.conn.poll_for_decision_task(
+                domain=self.domain,
+                taskList=task_list,
+                identity=self.identity,
+                nextPageToken=next_page_token)
+            next_page_token = page.get('nextPageToken')
+            resp['events'].extend(page['events'])
 
-                return resp
-
-    def run(self):
-        log.info('Polling for decision task...')
-        data = self.poll_swf()
-        try:
-            task = DecisionTask(data)
-        except Exception as exc:
-            log.error('Failed to prepare decision task: %s\nData:\n%s',
-                      exc, pprint.pformat(data))
-            raise
-
-        log.info('Build decisions for task: %s', task)
-        self.decide(task)
-
-        log.info('Respond with decisions: %s', task.decisions)
-        self.conn.respond_decision_task_completed(
-            taskToken=task.token, decisions=task.decisions)
+        return DecisionTask(resp)
 
     def decide(self, task):
-        workflow = self.workflows.get(task.workflow_type)
-        if workflow:
-            log.info('Run Workflow %s...', workflow)
-            workflow().decide()
-        else:
-            log.warning('Unknown workflow %s', task.workflow_type)
-            task.add_decision('FailWorkflowExecution',
-                              reason='Unkown workflow type',
-                              details='Workflow %s' % task.workflow_type)
+        workflow_key = (task.workflow_type, task.workflow_version)
+        Workflow = self.Workflows.get(workflow_key)
+
+        if not Workflow:
+            log.warning('Unknown workflow %s', task)
+            return
+
+        workflow = Workflow(task)
+
+        log.info('Running %r...', workflow)
+
+        try:
+            workflow.run()
+        except DecisionDone as done:
+            log.info(str(done))
+
+    def respond_decision(self, task):
+        try:
+            self.conn.respond_decision_task_completed(
+                taskToken=task.token,
+                decisions=task.decisions)
+        except ClientError as exc:
+            log.error('Decision response failed for %s: %s\n%s',
+                      task, exc.message, exc.response)
+        except Exception as exc:
+            log.error('Decision response failed for %s: %s', task, exc)
