@@ -5,7 +5,8 @@ Changelog
 0.0.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add command caravan-domain-register
+- Add command caravan-list
 
 
 0.0.2 (2015-11-12)
