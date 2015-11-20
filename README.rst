@@ -47,20 +47,19 @@ List execution for last 24h::
 
 List execution for year 2015::
 
-
-
-Timer example
--------------
     $ caravan-list -d CaravanExample --oldest 2015-01-01
 
 Run the decider::
 
-    $ caravan-decider -d CaravanExample -m caravan.examples.timer.workflow -t default
+    $ caravan-decider -d CaravanExample -m caravan.examples.demo -t default
 
 Start an execution::
 
-    $ caravan-start -d CaravanExample -n TimerExample -v 0.1 -i 1
+    $ caravan-start -d CaravanExample -n Demo -v 0.1 -i 1
 
+Send a signal to an execution::
+
+    $ caravan-signal -d CaravanExample -i 1 -s PAYMENT_CONFIRMED
 
 Similar projects
 ================
@@ -84,9 +83,16 @@ Clone and install development dependencies::
     $ cd caravan
     $ pip install -e .[dev]
 
-Run tests:
+Run tests::
 
-``TODO``
+    $ py.test
+
+Release
+=======
+
+The release process use zest.releaser::
+
+    $ fullrelease
 
 License
 =======
