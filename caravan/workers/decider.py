@@ -22,11 +22,7 @@ class Worker(object):
         log.info('Waiting for a decision task...')
         task = self.poll()
         if task:
-            log.info('Got a %r', task)
-            self.decide(task)
-
-            log.info('Respond with decisions: %s', task.decisions)
-            self.respond_decision(task)
+            self.run_task(task)
 
     def poll(self):
         task_list = dict(name=self.task_list)
@@ -49,22 +45,23 @@ class Worker(object):
 
         return DecisionTask(resp)
 
-    def decide(self, task):
+    def run_task(self, task):
+        log.info('Got a %r', task)
         workflow_key = (task.workflow_type, task.workflow_version)
-        Workflow = self.Workflows.get(workflow_key)
+        workflow_class = self.Workflows.get(workflow_key)
 
-        if not Workflow:
+        if not workflow_class:
             log.warning('Unknown workflow %s', task)
             return
 
-        workflow = Workflow(task)
-
-        log.info('Running %r...', workflow)
-
+        log.info('Running %r...', workflow_class)
         try:
-            workflow.run()
+            workflow_class(task).run()
         except DecisionDone as done:
             log.info(str(done))
+
+        log.info('Respond with decisions: %s', task.decisions)
+        self.respond_decision(task)
 
     def respond_decision(self, task):
         try:
