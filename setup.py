@@ -23,6 +23,7 @@ setup(
         'dev': [
             'pytest',
             'pytest-mock',
+            'pytest-cov',
             'zest.releaser[recommended]',
             'pylama',
             'pdbpp',
