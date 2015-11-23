@@ -2,7 +2,7 @@
 Changelog
 =========
 
-0.1.1 (unreleased)
+0.1.1 (2015-11-23)
 ------------------
 
 - Add command caravan-terminate
