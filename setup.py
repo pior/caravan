@@ -1,5 +1,4 @@
-from setuptools import find_packages
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 setup(
@@ -21,7 +20,14 @@ setup(
         'tabulate',
         ],
     extras_require={
-        'dev': ['zest.releaser[recommended]'],
+        'dev': [
+            'pytest',
+            'pytest-mock',
+            'zest.releaser[recommended]',
+            'pylama',
+            'pdbpp',
+            'freezegun',
+            ],
         },
     entry_points={
         'console_scripts': [
@@ -34,13 +40,13 @@ setup(
             ]
         },
     classifiers=[
-        "Development Status :: 2 - Pre-Alpha",
-        "Intended Audience :: Developers",
-        "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
-        "Topic :: Internet",
-        "Programming Language :: Python :: 2.7",
-        # "Programming Language :: Python :: 3.4",
-        # "Programming Language :: Python :: 3.5"
+        'Development Status :: 2 - Pre-Alpha',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
+        'Topic :: Internet',
+        'Programming Language :: Python :: 2.7',
+        # 'Programming Language :: Python :: 3.4',
+        # 'Programming Language :: Python :: 3.5'
         ],
     )
