@@ -13,6 +13,12 @@ class BaseCommand(object):
 
     default_config_section = 'caravan'
 
+    CHILD_POLICIES = [
+        'TERMINATE',
+        'REQUEST_CANCEL',
+        'ABANDON',
+        ]
+
     @classmethod
     def main(cls):
         cmd = cls()
@@ -36,7 +42,8 @@ class BaseCommand(object):
         args, remaining_args = config_parser.parse_known_args()
 
         # Full parser
-        parser = argparse.ArgumentParser(parents=[config_parser])
+        parser = argparse.ArgumentParser(description=self.description,
+                                         parents=[config_parser])
         self._setup_base_arguments(parser)
         self.setup_arguments(parser)
 

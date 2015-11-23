@@ -5,7 +5,7 @@ Changelog
 0.1.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add command caravan-terminate
 
 
 0.1.0 (2015-11-19)

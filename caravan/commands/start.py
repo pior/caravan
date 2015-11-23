@@ -30,6 +30,7 @@ class Command(BaseCommand):
             help='The maximum duration of decision tasks (seconds)')
         parser.add_argument(
             '--child-policy',
+            choices=self.CHILD_POLICIES,
             help='Policy to use for the child executions of this execution')
         parser.add_argument(
             '--lambda-role',

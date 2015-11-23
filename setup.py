@@ -28,6 +28,7 @@ setup(
             'caravan-decider = caravan.commands.decider:Command.main',
             'caravan-start = caravan.commands.start:Command.main',
             'caravan-signal = caravan.commands.signal:Command.main',
+            'caravan-terminate = caravan.commands.terminate:Command.main',
             'caravan-list = caravan.commands.list:Command.main',
             'caravan-domain-register = caravan.commands.domain_register:Command.main',
             ]

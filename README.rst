@@ -30,8 +30,8 @@ Features
 
 - Decider worker
 - Activity task worker
-- Commands to start/signal an arbitrary workflow execution
-- Command to list workflow execution
+- Commands to start/signal/terminate an arbitrary workflow execution
+- Command to list open workflow execution
 - Command to register a domain
 
 Usage
@@ -41,11 +41,11 @@ Setup a SWF for the example::
 
     $ caravan-domain-register -n CaravanExample --retention-days 1
 
-List execution for last 24h::
+List open execution for last 24h::
 
     $ caravan-list -d CaravanExample
 
-List execution for year 2015::
+List open execution for year 2015::
 
     $ caravan-list -d CaravanExample --oldest 2015-01-01
 
@@ -60,6 +60,10 @@ Start an execution::
 Send a signal to an execution::
 
     $ caravan-signal -d CaravanExample -i 1 -s PAYMENT_CONFIRMED
+
+Terminate an execution::
+
+    $ caravan-terminate -d CaravanExample -i 1
 
 Similar projects
 ================
