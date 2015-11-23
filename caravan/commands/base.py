@@ -57,11 +57,20 @@ class BaseCommand(object):
             valid_options = [option_string
                              for action in parser._actions
                              for option_string in action.option_strings]
+            nargs_options = {option_string: action.nargs
+                             for action in parser._actions
+                             for option_string in action.option_strings}
 
             for option, value in config_items:
                 option_string = '--%s' % option
+
                 if option_string in valid_options:
-                    remaining_args.extend([option_string, value])
+                    if nargs_options.get(option_string) == '+':
+                        value = value.split()
+                        option_args = [option_string] + value
+                    else:
+                        option_args = [option_string, value]
+                    remaining_args.extend(option_args)
 
         self.args = parser.parse_args(remaining_args)
 

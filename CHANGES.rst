@@ -6,6 +6,7 @@ Changelog
 ------------------
 
 - Add command caravan-terminate
+- Make --modules as config key works
 
 
 0.1.0 (2015-11-19)
