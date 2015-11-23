@@ -40,6 +40,11 @@ class Command(BaseCommand):
     def run(self):
         workflow_type = {'name': self.args.name, 'version': self.args.version}
 
+        if self.args.task_list is not None:
+            task_list = {'name': self.args.task_list}
+        else:
+            task_list = None
+
         if self.args.tag_list:
             tag_list = self.args.tag_list.split()
         else:
@@ -51,7 +56,7 @@ class Command(BaseCommand):
             workflowId=self.args.id,
             workflowType=workflow_type,
             input=self.args.input,
-            task_list=self.args.task_list,
+            taskList=task_list,
             tagList=tag_list,
             executionStartToCloseTimeout=self.args.execution_timeout,
             taskStartToCloseTimeout=self.args.task_timeout,

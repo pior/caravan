@@ -25,3 +25,4 @@ class Command(BaseCommand):
             runId=self.args.run_id,
             input=self.args.input,
             )
+        return 'Signal sent.'
