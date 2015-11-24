@@ -5,7 +5,7 @@ Changelog
 0.1.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Release again to fix PyPI upload server error
 
 
 0.1.2 (2015-11-24)
