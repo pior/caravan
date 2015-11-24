@@ -2,7 +2,7 @@
 Changelog
 =========
 
-0.1.3 (unreleased)
+0.1.3 (2015-11-24)
 ------------------
 
 - Release again to fix PyPI upload server error
