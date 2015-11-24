@@ -2,7 +2,7 @@
 Changelog
 =========
 
-0.1.2 (unreleased)
+0.1.2 (2015-11-24)
 ------------------
 
 - Fix crash with --logging-config
