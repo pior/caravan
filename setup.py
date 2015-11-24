@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='caravan',
-    version='0.1.3',
+    version='0.1.4.dev0',
     description='Light python framework for AWS SWF',
     long_description=open('README.rst').read(),
     keywords='AWS SWF workflow distributed background task',
