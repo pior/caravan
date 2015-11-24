@@ -10,7 +10,11 @@ Project
 - `Code on Github <https://github.com/pior/caravan>`_
 - `PyPi <https://pypi.python.org/pypi/caravan>`_
 - Doc: ``TODO``
-- Tests: ``TODO``
+- Tests: |travis|
+
+.. |travis| image:: https://travis-ci.org/pior/caravan.svg?branch=master
+    :target: https://travis-ci.org/pior/caravan
+
 
 Focus of this project
 =====================
