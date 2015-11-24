@@ -33,7 +33,7 @@ def test_args(mocker, capsys):
     assert 'opt=OPT' in out
 
 
-def test_args_logging(mocker, capsys):
+def test_args_logging_level(mocker, capsys):
     mocker.patch('sys.argv', ['PROG', '--req', 'REQ'])
     TestCommand.main()
     out, _ = capsys.readouterr()
@@ -48,6 +48,41 @@ def test_args_logging(mocker, capsys):
     TestCommand.main()
     out, _ = capsys.readouterr()
     assert 'lvl=%s' % logging.DEBUG in out
+
+
+LOGGING_CONFIG_FILE_DATA = """
+[loggers]
+keys = root
+
+[logger_root]
+level = DEBUG
+handlers = console
+
+[handlers]
+keys = console
+
+[handler_console]
+class = StreamHandler
+args = (sys.stderr,)
+level = DEBUG
+formatter = console
+
+[formatters]
+keys = console
+
+[formatter_console]
+format = %(message)s
+"""
+
+
+def test_args_logging_config(mocker, capsys, tmpdir):
+    tmpdir.chdir()
+    configfile = tmpdir.join('logging.conf')
+    configfile.write(LOGGING_CONFIG_FILE_DATA)
+
+    mocker.patch('sys.argv', ['PROG', '--req', 'REQ', '--logging-config',
+                              'logging.conf'])
+    TestCommand.main()
 
 
 def test_args_missing(mocker, capsys):

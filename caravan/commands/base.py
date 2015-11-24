@@ -1,6 +1,7 @@
 import argparse
 import ConfigParser
 import logging
+import logging.config
 import sys
 
 import six
