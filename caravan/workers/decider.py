@@ -1,10 +1,9 @@
 import logging
-import pprint
 
 from botocore.exceptions import ClientError
 
 from caravan.workers import get_default_identity
-from caravan.models.decision import DecisionTask, DecisionDone
+from caravan.models.decision import DecisionTask, DecisionDone, WorkflowFailure
 
 log = logging.getLogger(__name__)
 
@@ -59,6 +58,10 @@ class Worker(object):
             workflow_class(task).run()
         except DecisionDone as done:
             log.info(str(done))
+        except WorkflowFailure as failure:
+            task.add_decision('FailWorkflowExecution',
+                              reason=failure.reason,
+                              details=failure.details)
 
         log.info('Respond with decisions: %s', task.decisions)
         self.respond_decision(task)
