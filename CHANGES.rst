@@ -2,7 +2,7 @@
 Changelog
 =========
 
-0.1.4 (unreleased)
+0.1.4 (2015-12-02)
 ------------------
 
 - Allow workflows to raise an exception to fail an execution
