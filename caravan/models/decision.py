@@ -7,8 +7,16 @@ def normalize_attribute_key(payload):
     return payload
 
 
-class DecisionDone(BaseException):
+class DecisionDone(Exception):
     pass
+
+
+class WorkflowFailure(Exception):
+
+    def __init__(self, reason, details):
+        self.reason = reason
+        self.details = details
+        super(WorkflowFailure, self).__init__("%s (%s)" % (reason, details))
 
 
 class DecisionTask(object):
@@ -46,6 +54,9 @@ class DecisionTask(object):
             attribute_name: attributes,
         }
         self.decisions.append(decision_payload)
+
+    def fail(self, reason, details='-'):
+        raise WorkflowFailure(reason, details)
 
     def decision_done(self, msg='-'):
         raise DecisionDone('Decision Done: %s' % msg)
