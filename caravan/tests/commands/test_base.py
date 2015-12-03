@@ -80,8 +80,11 @@ class Test(unittest.TestCase):
         with captured(out(), err()) as (stdout, stderr):
             with self.assertRaises(SystemExit):
                 RequiredArgCommand.main(args=[])
-        self.assertIn('error: argument -r/--req is required',
-                      stderr.getvalue())
+
+        # Py2 and Py3 argparse have different messages
+        self.assertIn('error: ', stderr.getvalue())
+        self.assertIn('-r/--req', stderr.getvalue())
+        self.assertIn('required', stderr.getvalue())
 
     def test_args_logging_level(self):
         with captured(out(), err()) as (stdout, stderr):

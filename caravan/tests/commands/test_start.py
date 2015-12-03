@@ -46,7 +46,7 @@ class Test(unittest.TestCase):
             "workflowType": {"version": "VERSION", "name": "NAME"},
             "workflowId": "ID",
             }
-        self.assertEqual(json.loads(request.body), expected)
+        self.assertEqual(json.loads(request.parsed_body), expected)
 
         self.assertIn('Execution started.', stdout.getvalue())
         self.assertIn('1e536162-f1ea-48b0-85f3-aade88eef2f7',
@@ -64,7 +64,7 @@ class Test(unittest.TestCase):
             "workflowId": "ID",
             "workflowType": {"version": "VERSION", "name": "NAME"},
             }
-        self.assertEqual(json.loads(request.body), expected)
+        self.assertEqual(json.loads(request.parsed_body), expected)
 
     @httpretty.activate
     def test_parameter_tag(self):
@@ -78,7 +78,7 @@ class Test(unittest.TestCase):
             "workflowId": "ID",
             "tagList": ["TAG"],
             }
-        self.assertEqual(json.loads(request.body), expected)
+        self.assertEqual(json.loads(request.parsed_body), expected)
 
     @httpretty.activate
     def test_parameter_tag_two(self):
@@ -92,7 +92,7 @@ class Test(unittest.TestCase):
             "workflowId": "ID",
             "tagList": ["TAG1", "TAG2"]
             }
-        self.assertEqual(json.loads(request.body), expected)
+        self.assertEqual(json.loads(request.parsed_body), expected)
 
     @httpretty.activate
     def test_parameter_input(self):
@@ -106,7 +106,7 @@ class Test(unittest.TestCase):
             "workflowType": {"version": "VERSION", "name": "NAME"},
             "workflowId": "ID"
             }
-        self.assertEqual(json.loads(request.body), expected)
+        self.assertEqual(json.loads(request.parsed_body), expected)
 
     @httpretty.activate
     def test_parameter_execution_timeout(self):
@@ -120,7 +120,7 @@ class Test(unittest.TestCase):
             "workflowId": "ID",
             "executionStartToCloseTimeout": "60",
             }
-        self.assertEqual(json.loads(request.body), expected)
+        self.assertEqual(json.loads(request.parsed_body), expected)
 
     @httpretty.activate
     def test_parameter_task_timeout(self):
@@ -134,7 +134,7 @@ class Test(unittest.TestCase):
             "workflowId": "ID",
             "taskStartToCloseTimeout": "60",
             }
-        self.assertEqual(json.loads(request.body), expected)
+        self.assertEqual(json.loads(request.parsed_body), expected)
 
     @httpretty.activate
     def test_parameter_child_policy(self):
@@ -150,7 +150,7 @@ class Test(unittest.TestCase):
             "workflowId": "ID",
             "childPolicy": test_policy,
             }
-        self.assertEqual(json.loads(request.body), expected)
+        self.assertEqual(json.loads(request.parsed_body), expected)
 
     @httpretty.activate
     def test_parameter_lambda_role(self):
@@ -165,4 +165,4 @@ class Test(unittest.TestCase):
             "workflowId": "ID",
             "lambdaRole": 'ROLE',
             }
-        self.assertEqual(json.loads(request.body), expected)
+        self.assertEqual(json.loads(request.parsed_body), expected)

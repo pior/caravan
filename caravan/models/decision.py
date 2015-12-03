@@ -1,3 +1,4 @@
+from __future__ import print_function
 import pprint
 
 
@@ -43,7 +44,7 @@ class DecisionTask(object):
         for e in self.events:
             if 'Decision' in e['eventType']:
                 continue
-            print "==== %3i %s" % (e['eventId'], e['eventType'])
+            print("==== %3i %s" % (e['eventId'], e['eventType']))
             pprint.pprint(e['attributes'])
 
     def add_decision(self, decision_type, **attributes):

@@ -34,6 +34,6 @@ class Test(unittest.TestCase):
             "workflowId": "ID",
             "signalName": "SIG"
             }
-        self.assertEqual(json.loads(request.body), expected)
+        self.assertEqual(json.loads(request.parsed_body), expected)
 
         self.assertIn('Signal sent.', stdout.getvalue())

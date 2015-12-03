@@ -67,7 +67,7 @@ class Test(unittest.TestCase):
                 'oldestDate': 1419984000
                 }
             }
-        self.assertEqual(json.loads(request.body), expected)
+        self.assertEqual(json.loads(request.parsed_body), expected)
 
         self.assertIn('.', stdout.getvalue())
 
@@ -86,7 +86,7 @@ class Test(unittest.TestCase):
                 },
             'typeFilter': {'name': 'NAME', 'version': 'VERSION'}
             }
-        self.assertEqual(json.loads(request.body), expected)
+        self.assertEqual(json.loads(request.parsed_body), expected)
 
     @freeze_time("2015-01-01")
     @httpretty.activate
@@ -103,7 +103,7 @@ class Test(unittest.TestCase):
                 },
             'tagFilter': {'tag': 'TAG'},
             }
-        self.assertEqual(json.loads(request.body), expected)
+        self.assertEqual(json.loads(request.parsed_body), expected)
 
     @freeze_time("2015-01-01")
     @httpretty.activate
@@ -120,4 +120,4 @@ class Test(unittest.TestCase):
                 },
             'executionFilter': {'workflowId': 'ID'},
             }
-        self.assertEqual(json.loads(request.body), expected)
+        self.assertEqual(json.loads(request.parsed_body), expected)

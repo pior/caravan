@@ -1,5 +1,6 @@
+from __future__ import print_function
 import argparse
-import ConfigParser
+from six.moves import configparser
 import logging
 import logging.config
 import sys
@@ -29,7 +30,7 @@ class BaseCommand(object):
         response = cmd._run()
         output = cmd._handle_response(response)
         if output is not None:
-            print output
+            print(output)
         return response
 
     def _parse_args(self, args=None):
@@ -52,7 +53,7 @@ class BaseCommand(object):
 
         # Read defaults from config file
         if config_args.config:
-            cp = ConfigParser.RawConfigParser()
+            cp = configparser.RawConfigParser()
             with open(config_args.config) as fp:
                 cp.readfp(fp)
             config_items = cp.items(config_args.config_section)
@@ -99,7 +100,7 @@ class BaseCommand(object):
         elif self.args.config:
             try:
                 logging.config.fileConfig(self.args.config)
-            except ConfigParser.NoSectionError:
+            except (configparser.NoSectionError, KeyError):
                 pass
         else:
             logging.basicConfig(level=self.args.logging_level)

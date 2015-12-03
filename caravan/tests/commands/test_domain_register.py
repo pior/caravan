@@ -32,6 +32,6 @@ class Test(unittest.TestCase):
             "name": "DOMAIN",
             "workflowExecutionRetentionPeriodInDays": "10"
             }
-        self.assertEqual(json.loads(request.body), expected)
+        self.assertEqual(json.loads(request.parsed_body), expected)
 
         self.assertIn('Success.', stdout.getvalue())

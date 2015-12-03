@@ -45,7 +45,7 @@ class Test(unittest.TestCase):
             "domain": "DOMAIN",
             "workflowId": "ID",
             }
-        self.assertEqual(json.loads(request.body), expected)
+        self.assertEqual(json.loads(request.parsed_body), expected)
 
         self.assertIn('Execution terminated.', stdout.getvalue())
 
@@ -60,7 +60,7 @@ class Test(unittest.TestCase):
             "runId": 'RUNID',
             "workflowId": "ID",
             }
-        self.assertEqual(json.loads(request.body), expected)
+        self.assertEqual(json.loads(request.parsed_body), expected)
 
     @httpretty.activate
     def test_parameter_reason(self):
@@ -73,7 +73,7 @@ class Test(unittest.TestCase):
             "reason": 'REASON',
             "workflowId": "ID",
             }
-        self.assertEqual(json.loads(request.body), expected)
+        self.assertEqual(json.loads(request.parsed_body), expected)
 
     @httpretty.activate
     def test_parameter_details(self):
@@ -86,7 +86,7 @@ class Test(unittest.TestCase):
             "details": 'DETAILS',
             "workflowId": "ID",
             }
-        self.assertEqual(json.loads(request.body), expected)
+        self.assertEqual(json.loads(request.parsed_body), expected)
 
     @httpretty.activate
     def test_parameter_child_policy(self):
@@ -101,4 +101,4 @@ class Test(unittest.TestCase):
             "childPolicy": test_policy,
             "workflowId": "ID",
             }
-        self.assertEqual(json.loads(request.body), expected)
+        self.assertEqual(json.loads(request.parsed_body), expected)
