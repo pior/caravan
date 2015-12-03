@@ -7,6 +7,7 @@ Changelog
 
 - Switch to unittest + nose for tests
 - Tested with Python 2.7, 3.3, 3.4, 3.5
+- Don't force the AWS region to us-east-1
 
 
 0.1.4 (2015-12-02)

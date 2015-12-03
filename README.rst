@@ -38,6 +38,13 @@ Features
 - Command to list open workflow execution
 - Command to register a domain
 
+Configuration
+=============
+
+Caravan uses Boto3 to connect to AWS. See
+`Boto 3 configuration guide <http://boto3.readthedocs.org/en/latest/guide/configuration.html>`_
+to setup your AWS credentials.
+
 Usage
 =====
 
