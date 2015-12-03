@@ -5,7 +5,7 @@ Changelog
 0.1.5 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Switch to unittest + nose for tests
 
 
 0.1.4 (2015-12-02)

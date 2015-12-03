@@ -21,13 +21,19 @@ setup(
         ],
     extras_require={
         'dev': [
-            'pytest',
-            'pytest-mock',
-            'pytest-cov',
+            'ipdb',
+
+            'nose',
+            'nosexcover',
+            'coverage',
+            'yanc == 0.2.4',
+            'mock',
+            'freezegun',
+            'abduct',
+            'httpretty',
+
             'zest.releaser[recommended]',
             'pylama',
-            'pdbpp',
-            'freezegun',
             ],
         },
     entry_points={

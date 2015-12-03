@@ -82,18 +82,33 @@ Ruby:
 
 - AWS Flow: https://github.com/aws/aws-flow-ruby
 
+References
+==========
+
+- `AWS Developer Guide for SWF <http://docs.aws.amazon.com/amazonswf/latest/developerguide/>`_
+- `AWS API reference for SWF <http://docs.aws.amazon.com/amazonswf/latest/apireference/>`_
+
 Development
 ===========
 
+Possibly use `virtualenvwrapper <https://virtualenvwrapper.readthedocs.org/en/latest/>`_
+to manage your virtualenvs.
+
+    $ mkvirtualenv caravan
+
+    or
+
+    $ virtualenv caravan
+
 Clone and install development dependencies::
 
-    $ git clone git@github.com:pior/caravan.git
-    $ cd caravan
-    $ pip install -e .[dev]
+    (caravan)$ git clone git@github.com:pior/caravan.git
+    (caravan)$ cd caravan
+    (caravan)$ pip install -e .[dev]
 
 Run tests::
 
-    $ py.test
+    (caravan)$ nosetests
 
 Release
 =======

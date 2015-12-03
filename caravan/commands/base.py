@@ -21,16 +21,18 @@ class BaseCommand(object):
         ]
 
     @classmethod
-    def main(cls):
+    def main(cls, args=None):
+        """Setuptools console-script entrypoint"""
         cmd = cls()
-        cmd._parse_args()
+        cmd._parse_args(args=args)
         cmd._setup_logging()
         response = cmd._run()
         output = cmd._handle_response(response)
         if output is not None:
             print output
+        return response
 
-    def _parse_args(self):
+    def _parse_args(self, args=None):
         # Config only parser
         config_parser = argparse.ArgumentParser(description=self.description,
                                                 add_help=False)
@@ -40,7 +42,7 @@ class BaseCommand(object):
                                    default=self.default_config_section,
                                    help='section of the config file for '
                                         'setup.')
-        args, remaining_args = config_parser.parse_known_args()
+        config_args, remaining_args = config_parser.parse_known_args(args=args)
 
         # Full parser
         parser = argparse.ArgumentParser(description=self.description,
@@ -49,11 +51,11 @@ class BaseCommand(object):
         self.setup_arguments(parser)
 
         # Read defaults from config file
-        if args.config:
+        if config_args.config:
             cp = ConfigParser.RawConfigParser()
-            with open(args.config) as fp:
+            with open(config_args.config) as fp:
                 cp.readfp(fp)
-            config_items = cp.items(args.config_section)
+            config_items = cp.items(config_args.config_section)
 
             valid_options = [option_string
                              for action in parser._actions
@@ -71,9 +73,9 @@ class BaseCommand(object):
                         option_args = [option_string] + value
                     else:
                         option_args = [option_string, value]
-                    remaining_args.extend(option_args)
+                    args.extend(option_args)
 
-        self.args = parser.parse_args(remaining_args)
+        self.args = parser.parse_args(args)
 
     def _setup_base_arguments(self, parser):
         parser.add_argument('--logging-config',
@@ -95,7 +97,10 @@ class BaseCommand(object):
         if self.args.logging_config:
             logging.config.fileConfig(self.args.logging_config)
         elif self.args.config:
-            logging.config.fileConfig(self.args.config)
+            try:
+                logging.config.fileConfig(self.args.config)
+            except ConfigParser.NoSectionError:
+                pass
         else:
             logging.basicConfig(level=self.args.logging_level)
 
@@ -116,4 +121,4 @@ class BaseCommand(object):
                 return 'No results.'
             if hasattr(self, 'formatter'):
                 response = map(self.formatter, response)
-            return tabulate(response, headers='keys', tablefmt="fancy_grid")
+            return tabulate(response, headers='keys', tablefmt="plain")

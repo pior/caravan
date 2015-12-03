@@ -4,7 +4,7 @@ import unittest
 import httpretty
 from abduct import captured, out, err
 
-from caravan.commands.signal import Command
+from caravan.commands.domain_register import Command
 
 
 httpretty.HTTPretty.allow_net_connect = False
@@ -14,7 +14,7 @@ class Test(unittest.TestCase):
 
     @httpretty.activate
     def test_nominal(self):
-        args = ['-d', 'DOMAIN', '-i', 'ID', '-s', 'SIG']
+        args = ['--name', 'DOMAIN', '--retention-days', '10']
 
         headers = {
             'x-amzn-RequestId': 'd68969c7-3f0d-11e1-9b11-7182192d0b57',
@@ -30,13 +30,11 @@ class Test(unittest.TestCase):
 
         request = httpretty.last_request()
         self.assertEqual(request.headers.get('x-amz-target'),
-                         'SimpleWorkflowService.SignalWorkflowExecution')
-
+                         'SimpleWorkflowService.RegisterDomain')
         expected = {
-            "domain": "DOMAIN",
-            "workflowId": "ID",
-            "signalName": "SIG"
+            "name": "DOMAIN",
+            "workflowExecutionRetentionPeriodInDays": "10"
             }
         self.assertEqual(json.loads(request.body), expected)
 
-        self.assertIn('Signal sent.', stdout.getvalue())
+        self.assertIn('Success.', stdout.getvalue())

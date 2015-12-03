@@ -1,7 +1,9 @@
+import unittest
 import logging
 
-import pytest
+from abduct import captured, out, err
 
+from caravan.tests.util import InTempDir
 from caravan.commands.base import BaseCommand
 
 
@@ -10,45 +12,33 @@ class TestCommand(BaseCommand):
     description = 'DESCRIPTION TEST'
 
     def setup_arguments(self, parser):
-        parser.add_argument('-r', '--req', required=True)
         parser.add_argument('-o', '--opt')
 
     def run(self):
-        print 'req=%s' % self.args.req
-        print 'opt=%s' % self.args.opt
-        print 'lvl=%s' % self.args.logging_level
+        arguments = self.args.__dict__.items()
+        lines = ['%s=%s' % (k, v) for k, v in arguments]
+        lines.append('EndOfOutput')
+        return '\n'.join(lines)
 
 
-def test_args(mocker, capsys):
-    mocker.patch('sys.argv', ['PROG', '--req', 'REQ'])
-    TestCommand.main()
-    out, _ = capsys.readouterr()
-    assert 'req=REQ' in out
-    assert 'opt=None' in out
+class RequiredArgCommand(TestCommand):
 
-    mocker.patch('sys.argv', ['PROG', '--req', 'REQ', '--opt', 'OPT'])
-    TestCommand.main()
-    out, _ = capsys.readouterr()
-    assert 'req=REQ' in out
-    assert 'opt=OPT' in out
+    def setup_arguments(self, parser):
+        parser.add_argument('-r', '--req', required=True)
+        parser.add_argument('-o', '--opt')
 
 
-def test_args_logging_level(mocker, capsys):
-    mocker.patch('sys.argv', ['PROG', '--req', 'REQ'])
-    TestCommand.main()
-    out, _ = capsys.readouterr()
-    assert 'lvl=%s' % logging.WARNING in out
+class KeyboardInterruptCommand(TestCommand):
 
-    mocker.patch('sys.argv', ['PROG', '--req', 'REQ', '--verbose'])
-    TestCommand.main()
-    out, _ = capsys.readouterr()
-    assert 'lvl=%s' % logging.INFO in out
+    def run(self):
+        raise KeyboardInterrupt()
 
-    mocker.patch('sys.argv', ['PROG', '--req', 'REQ', '--debug'])
-    TestCommand.main()
-    out, _ = capsys.readouterr()
-    assert 'lvl=%s' % logging.DEBUG in out
 
+CONFIG_FILE_DATA = """
+[caravan]
+req = REQFILE
+opt = OPTFILE
+"""
 
 LOGGING_CONFIG_FILE_DATA = """
 [loggers]
@@ -75,31 +65,67 @@ format = %(message)s
 """
 
 
-def test_args_logging_config(mocker, capsys, tmpdir):
-    tmpdir.chdir()
-    configfile = tmpdir.join('logging.conf')
-    configfile.write(LOGGING_CONFIG_FILE_DATA)
+class Test(unittest.TestCase):
 
-    mocker.patch('sys.argv', ['PROG', '--req', 'REQ', '--logging-config',
-                              'logging.conf'])
-    TestCommand.main()
+    def test_args_optional(self):
+        with captured(out(), err()) as (stdout, stderr):
+            response = TestCommand.main(args=[])
+        self.assertIn('opt=None', response)
 
+        with captured(out(), err()) as (stdout, stderr):
+            response = TestCommand.main(args=['--opt', 'OPT'])
+        self.assertIn('opt=OPT', response)
 
-def test_args_missing(mocker, capsys):
-    mocker.patch('sys.argv', ['PROG'])
+    def test_args_missing(self):
+        with captured(out(), err()) as (stdout, stderr):
+            with self.assertRaises(SystemExit):
+                RequiredArgCommand.main(args=[])
+        self.assertIn('error: argument -r/--req is required',
+                      stderr.getvalue())
 
-    with pytest.raises(SystemExit):
-        TestCommand.main()
+    def test_args_logging_level(self):
+        with captured(out(), err()) as (stdout, stderr):
+            response = TestCommand.main(args=[])
+        self.assertIn('logging_level=%s' % logging.WARNING, response)
 
-    _, err = capsys.readouterr()
-    assert 'PROG: error: argument -r/--req is required' in err
+        with captured(out(), err()) as (stdout, stderr):
+            response = TestCommand.main(args=['--verbose'])
+        self.assertIn('logging_level=%s' % logging.INFO, response)
 
+        with captured(out(), err()) as (stdout, stderr):
+            response = TestCommand.main(args=['--debug'])
+        self.assertIn('logging_level=%s' % logging.DEBUG, response)
 
-def test_args_help(mocker, capsys):
-    mocker.patch('sys.argv', ['PROG', '--help'])
+    def test_config(self):
+        with InTempDir():
+            with open('config.conf', 'w') as fd:
+                fd.write(CONFIG_FILE_DATA)
 
-    with pytest.raises(SystemExit):
-        TestCommand.main()
+            args = ['--config', 'config.conf']
+            with captured(out(), err()) as (stdout, stderr):
+                TestCommand.main(args=args)
 
-    out, _ = capsys.readouterr()
-    assert TestCommand.description in out
+        self.assertIn('EndOfOutput', stdout.getvalue())
+
+    def test_args_logging_config(self):
+        with InTempDir():
+            with open('logging.conf', 'w') as fd:
+                fd.write(LOGGING_CONFIG_FILE_DATA)
+
+            args = ['--logging-config', 'logging.conf']
+            with captured(out(), err()) as (stdout, stderr):
+                TestCommand.main(args=args)
+
+        self.assertIn('EndOfOutput', stdout.getvalue())
+
+    def test_args_help(self):
+        with captured(out(), err()) as (stdout, stderr):
+            with self.assertRaises(SystemExit):
+                TestCommand.main(args=['--help'])
+        self.assertIn(TestCommand.description, stdout.getvalue())
+
+    def test_keyboard_interrupt(self):
+        with captured(out(), err()) as (stdout, stderr):
+            with self.assertRaises(SystemExit) as exc:
+                KeyboardInterruptCommand.main(args=[])
+        self.assertEqual(str(exc.exception), '1')
