@@ -4,3 +4,6 @@ dist/
 
 .cache
 .coverage
+coverage.xml
+.noseids
+nosetests.xml
