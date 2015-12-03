@@ -7,9 +7,6 @@ from abduct import captured, out, err
 from caravan.commands.domain_register import Command
 
 
-httpretty.HTTPretty.allow_net_connect = False
-
-
 class Test(unittest.TestCase):
 
     @httpretty.activate

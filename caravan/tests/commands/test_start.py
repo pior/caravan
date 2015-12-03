@@ -7,9 +7,6 @@ from abduct import captured, out, err
 from caravan.commands.start import Command
 
 
-httpretty.HTTPretty.allow_net_connect = False
-
-
 def httpretty_register():
     headers = {
         'x-amzn-RequestId': 'd68969c7-3f0d-11e1-9b11-7182192d0b57',

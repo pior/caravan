@@ -6,6 +6,6 @@ python:
 
 install:
   - "pip install -U pip"
-  - "pip install .[dev]"
+  - "pip install -e .[dev]"
 
 script: nosetests
