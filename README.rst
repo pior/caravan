@@ -36,7 +36,7 @@ Features
 - Activity task worker ``TODO``
 - Commands to start/signal/terminate an arbitrary workflow execution
 - Command to list open workflow execution
-- Command to register a domain
+- Command to register a domain / list domains
 
 Configuration
 =============

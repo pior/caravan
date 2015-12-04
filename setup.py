@@ -44,6 +44,7 @@ setup(
             'caravan-terminate = caravan.commands.terminate:Command.main',
             'caravan-list = caravan.commands.list:Command.main',
             'caravan-domain-register = caravan.commands.domain_register:Command.main',
+            'caravan-domain-list = caravan.commands.domain_list:Command.main',
             ]
         },
     classifiers=[

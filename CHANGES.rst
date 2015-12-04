@@ -5,7 +5,7 @@ Changelog
 0.2.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add command caravan-domain-list
 
 
 0.2.0 (2015-12-03)
