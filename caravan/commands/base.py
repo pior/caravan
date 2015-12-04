@@ -31,7 +31,6 @@ class BaseCommand(object):
         output = cmd._handle_response(response)
         if output is not None:
             print(output)
-        return response
 
     def _parse_args(self, args=None):
         # Config only parser

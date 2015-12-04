@@ -69,12 +69,12 @@ class Test(unittest.TestCase):
 
     def test_args_optional(self):
         with captured(out(), err()) as (stdout, stderr):
-            response = TestCommand.main(args=[])
-        self.assertIn('opt=None', response)
+            TestCommand.main(args=[])
+        self.assertIn('opt=None', stdout.getvalue())
 
         with captured(out(), err()) as (stdout, stderr):
-            response = TestCommand.main(args=['--opt', 'OPT'])
-        self.assertIn('opt=OPT', response)
+            TestCommand.main(args=['--opt', 'OPT'])
+        self.assertIn('opt=OPT', stdout.getvalue())
 
     def test_args_missing(self):
         with captured(out(), err()) as (stdout, stderr):
@@ -88,16 +88,16 @@ class Test(unittest.TestCase):
 
     def test_args_logging_level(self):
         with captured(out(), err()) as (stdout, stderr):
-            response = TestCommand.main(args=[])
-        self.assertIn('logging_level=%s' % logging.WARNING, response)
+            TestCommand.main(args=[])
+        self.assertIn('logging_level=%s' % logging.WARNING, stdout.getvalue())
 
         with captured(out(), err()) as (stdout, stderr):
-            response = TestCommand.main(args=['--verbose'])
-        self.assertIn('logging_level=%s' % logging.INFO, response)
+            TestCommand.main(args=['--verbose'])
+        self.assertIn('logging_level=%s' % logging.INFO, stdout.getvalue())
 
         with captured(out(), err()) as (stdout, stderr):
-            response = TestCommand.main(args=['--debug'])
-        self.assertIn('logging_level=%s' % logging.DEBUG, response)
+            TestCommand.main(args=['--debug'])
+        self.assertIn('logging_level=%s' % logging.DEBUG, stdout.getvalue())
 
     def test_config(self):
         with InTempDir():
