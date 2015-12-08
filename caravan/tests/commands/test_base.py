@@ -3,7 +3,7 @@ import logging
 
 from abduct import captured, out, err
 
-from caravan.tests.util import InTempDir
+from caravan.tests.util import InTempDir, mock_args
 from caravan.commands.base import BaseCommand
 
 
@@ -69,17 +69,20 @@ class Test(unittest.TestCase):
 
     def test_args_optional(self):
         with captured(out(), err()) as (stdout, stderr):
-            TestCommand.main(args=[])
+            with mock_args([]):
+                TestCommand.main()
         self.assertIn('opt=None', stdout.getvalue())
 
         with captured(out(), err()) as (stdout, stderr):
-            TestCommand.main(args=['--opt', 'OPT'])
+            with mock_args(['--opt', 'OPT']):
+                TestCommand.main()
         self.assertIn('opt=OPT', stdout.getvalue())
 
     def test_args_missing(self):
         with captured(out(), err()) as (stdout, stderr):
-            with self.assertRaises(SystemExit):
-                RequiredArgCommand.main(args=[])
+            with mock_args([]):
+                with self.assertRaises(SystemExit):
+                    RequiredArgCommand.main()
 
         # Py2 and Py3 argparse have different messages
         self.assertIn('error: ', stderr.getvalue())
@@ -88,15 +91,18 @@ class Test(unittest.TestCase):
 
     def test_args_logging_level(self):
         with captured(out(), err()) as (stdout, stderr):
-            TestCommand.main(args=[])
+            with mock_args([]):
+                TestCommand.main()
         self.assertIn('logging_level=%s' % logging.WARNING, stdout.getvalue())
 
         with captured(out(), err()) as (stdout, stderr):
-            TestCommand.main(args=['--verbose'])
+            with mock_args(['--verbose']):
+                TestCommand.main()
         self.assertIn('logging_level=%s' % logging.INFO, stdout.getvalue())
 
         with captured(out(), err()) as (stdout, stderr):
-            TestCommand.main(args=['--debug'])
+            with mock_args(['--debug']):
+                TestCommand.main()
         self.assertIn('logging_level=%s' % logging.DEBUG, stdout.getvalue())
 
     def test_config(self):
@@ -106,7 +112,8 @@ class Test(unittest.TestCase):
 
             args = ['--config', 'config.conf']
             with captured(out(), err()) as (stdout, stderr):
-                TestCommand.main(args=args)
+                with mock_args(args):
+                    TestCommand.main()
 
         self.assertIn('EndOfOutput', stdout.getvalue())
 
@@ -117,18 +124,21 @@ class Test(unittest.TestCase):
 
             args = ['--logging-config', 'logging.conf']
             with captured(out(), err()) as (stdout, stderr):
-                TestCommand.main(args=args)
+                with mock_args(args):
+                    TestCommand.main()
 
         self.assertIn('EndOfOutput', stdout.getvalue())
 
     def test_args_help(self):
         with captured(out(), err()) as (stdout, stderr):
-            with self.assertRaises(SystemExit):
-                TestCommand.main(args=['--help'])
+            with mock_args(['--help']):
+                with self.assertRaises(SystemExit):
+                    TestCommand.main()
         self.assertIn(TestCommand.description, stdout.getvalue())
 
     def test_keyboard_interrupt(self):
         with captured(out(), err()) as (stdout, stderr):
-            with self.assertRaises(SystemExit) as exc:
-                KeyboardInterruptCommand.main(args=[])
+            with mock_args([]):
+                with self.assertRaises(SystemExit) as exc:
+                    KeyboardInterruptCommand.main()
         self.assertEqual(str(exc.exception), '1')

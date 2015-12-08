@@ -6,6 +6,7 @@ Changelog
 ------------------
 
 - Add command caravan-domain-list
+- Mock sys.argv rather than using a special argument
 
 
 0.2.0 (2015-12-03)

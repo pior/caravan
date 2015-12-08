@@ -1,6 +1,8 @@
 import os
 import tempfile
 
+import mock
+
 
 class InTempDir(object):
 
@@ -12,3 +14,7 @@ class InTempDir(object):
 
     def __exit__(self, *args):
         os.chdir(self._pwd)
+
+
+def mock_args(args):
+    return mock.patch('sys.argv', ['PROG'] + args)

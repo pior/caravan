@@ -4,6 +4,7 @@ import unittest
 import httpretty
 from abduct import captured, out, err
 
+from caravan.tests.util import mock_args
 from caravan.commands.signal import Command
 
 
@@ -23,7 +24,8 @@ class Test(unittest.TestCase):
                                body='')
 
         with captured(out(), err()) as (stdout, stderr):
-            Command.main(args=args)
+            with mock_args(args):
+                Command.main()
 
         request = httpretty.last_request()
         self.assertEqual(request.headers.get('x-amz-target'),

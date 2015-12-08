@@ -22,17 +22,19 @@ class BaseCommand(object):
         ]
 
     @classmethod
-    def main(cls, args=None):
+    def main(cls):
         """Setuptools console-script entrypoint"""
         cmd = cls()
-        cmd._parse_args(args=args)
+        cmd._parse_args()
         cmd._setup_logging()
         response = cmd._run()
         output = cmd._handle_response(response)
         if output is not None:
             print(output)
 
-    def _parse_args(self, args=None):
+    def _parse_args(self):
+        args = sys.argv[1:]
+
         # Config only parser
         config_parser = argparse.ArgumentParser(description=self.description,
                                                 add_help=False)
@@ -42,7 +44,7 @@ class BaseCommand(object):
                                    default=self.default_config_section,
                                    help='section of the config file for '
                                         'setup.')
-        config_args, remaining_args = config_parser.parse_known_args(args=args)
+        config_args, remaining_args = config_parser.parse_known_args()
 
         # Full parser
         parser = argparse.ArgumentParser(description=self.description,

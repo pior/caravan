@@ -4,6 +4,7 @@ import json
 import httpretty
 from abduct import captured, out, err
 
+from caravan.tests.util import mock_args
 from caravan.commands.domain_list import Command
 
 
@@ -32,7 +33,8 @@ def run_command(additional_args):
     args = []
     args += additional_args
     with captured(out(), err()) as (stdout, stderr):
-        Command.main(args=args)
+        with mock_args(args):
+            Command.main()
 
     return stdout, stderr
 
