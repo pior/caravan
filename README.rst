@@ -43,7 +43,50 @@ Configuration
 
 Caravan uses Boto3 to connect to AWS. See
 `Boto 3 configuration guide <http://boto3.readthedocs.org/en/latest/guide/configuration.html>`_
-to setup your AWS credentials.
+for the complete documentation.
+
+.. warning::
+    On AWS EC2, the metadata provider only provides the credentials, the
+    must be provided by configuration.
+
+Environment Variables
+---------------------
+
+``AWS_ACCESS_KEY_ID``
+    The access key for your AWS account.
+
+``AWS_SECRET_ACCESS_KEY``
+    The secret key for your AWS account.
+
+``AWS_DEFAULT_REGION``
+    The default region to use, e.g. `us-east-1`.
+
+``AWS_PROFILE``
+    The default credential and configuration profile to use, if any.
+
+Configuration Files
+-------------------
+
+The credentials file is located at ``~/.aws/credentials``::
+
+    [default]
+    # The access key for your AWS account
+    aws_access_key_id=<YOUR ACCESS KEY ID>
+
+    # The secret key for your AWS account
+    aws_secret_access_key=<YOUR SECRET KEY>
+
+The settings file is located at ``~/.aws/config``::
+
+    [default]
+    # The default region when making requests
+    region=<REGION NAME>
+
+It also supports profiles::
+
+    [profile dev-profile]
+    # The default region when using the dev-profile account
+    region=<REGION NAME>
 
 Usage
 =====
