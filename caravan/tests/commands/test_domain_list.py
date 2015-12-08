@@ -15,8 +15,10 @@ def httpretty_register():
     body = """
         {"domainInfos":
           [
-            {"description": "music", "name": "867530901", "status": "REGISTERED"},
-            {"description": "music", "name": "867530902", "status": "REGISTERED"},
+            {"description": "music", "name": "867530901",
+             "status": "REGISTERED"},
+            {"description": "music", "name": "867530902",
+             "status": "REGISTERED"},
             {"description": "", "name": "Demo", "status": "REGISTERED"}
           ]
         } """
