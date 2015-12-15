@@ -5,7 +5,7 @@ Changelog
 0.2.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add a workflow demo (caravan.examples.demo)
 
 
 0.2.1 (2015-12-07)

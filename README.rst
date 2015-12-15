@@ -94,32 +94,33 @@ It also supports profiles::
     # The default region when using the dev-profile account
     region=<REGION NAME>
 
-Usage
-=====
+Demo
+====
 
 Setup a SWF for the example::
 
     $ caravan-domain-register -n CaravanExample --retention-days 1
 
-List open execution for last 24h::
+Run the decider with the Demo workflow::
 
-    $ caravan-list -d CaravanExample
+    $ caravan-decider -d CaravanExample -m caravan.examples.demo -t default --verbose
 
-List open execution for year 2015::
-
-    $ caravan-list -d CaravanExample --oldest 2015-01-01
-
-Run the decider::
-
-    $ caravan-decider -d CaravanExample -m caravan.examples.demo -t default
-
-Start an execution::
+Start an execution of the Demo workflow::
 
     $ caravan-start -d CaravanExample -n Demo -v 0.1 -i 1
 
+    (The Demo workflow will wait for 5 minutes)
+
+List the executions::
+
+    $ caravan-list -d CaravanExample
+    $ caravan-list -d CaravanExample --oldest 2015-01-01
+
 Send a signal to an execution::
 
-    $ caravan-signal -d CaravanExample -i 1 -s PAYMENT_CONFIRMED
+    $ caravan-signal -d CaravanExample -i 1 -s PRINT --input 'Hello World!'
+    $ caravan-signal -d CaravanExample -i 1 -s PRINT --input 'Lorem ipsum'
+    $ caravan-signal -d CaravanExample -i 1 -s STOP
 
 Terminate an execution::
 
