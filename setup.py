@@ -28,7 +28,7 @@ setup(
             'mock',
             'freezegun',
             'abduct',
-            'httpretty',
+            'httpretty == 0.8.10',
 
             'zest.releaser[recommended]',
             'pylama',
