@@ -4,17 +4,23 @@ Caravan
 
 **Light python framework for AWS SWF**
 
-Project
-=======
+About this Project
+==================
+
+Caravan is being used at `Ludia <https://github.com/ludia>`_ for projects
+like marketing campaign system and on-demand distributed processing
+systems (thanks to hundreds of Lambda functions).
+
+Feedbacks, ideas and contributions are highly welcomed. (Just open a
+`Github issue <https://github.com/pior/caravan/issues>`_).
 
 - `Code on Github <https://github.com/pior/caravan>`_
 - `PyPi <https://pypi.python.org/pypi/caravan>`_
+- `Tests <https://travis-ci.org/pior/caravan>`_ |travis|
 - Doc: ``TODO``
-- Tests: |travis|
 
 .. |travis| image:: https://travis-ci.org/pior/caravan.svg?branch=master
     :target: https://travis-ci.org/pior/caravan
-
 
 Focus of this project
 =====================
