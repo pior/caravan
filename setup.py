@@ -11,7 +11,7 @@ setup(
     author_email='pior@pbastida.net',
     url='https://github.com/pior/caravan',
     license='MIT',
-    packages=find_packages(),
+    packages=find_packages(exclude=['tests']),
     zip_safe=False,
     install_requires=[
         'boto3',

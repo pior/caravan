@@ -1,5 +1,6 @@
 import os
 
+import httpretty
 import boto3
 
 
@@ -12,3 +13,5 @@ def setUpModule():
 
     # Reset previously created default session (for credentials)
     boto3.setup_default_session()
+
+    httpretty.HTTPretty.allow_net_connect = False
