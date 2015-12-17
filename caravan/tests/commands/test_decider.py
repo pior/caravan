@@ -64,7 +64,7 @@ class Test(unittest.TestCase):
                       domain='DOMAIN',
                       workflow=fixtures.TestWorkflow2),
             ]
-        self.assertItemsEqual(m_register.call_args_list, expected)
+        self.assertEqual(m_register.call_args_list, expected)
 
 
 class TestClassLoader(unittest.TestCase):
@@ -72,7 +72,7 @@ class TestClassLoader(unittest.TestCase):
     def test_nominal(self):
         loader = ClassesLoaderFromModule(caravan.Workflow)
         result = loader('caravan.tests.fixtures')
-        self.assertItemsEqual(
+        self.assertEqual(
             result, [fixtures.TestWorkflow1, fixtures.TestWorkflow2])
 
 
