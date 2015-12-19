@@ -42,19 +42,19 @@ class Demo(Workflow):
         elif last_event['eventType'] == 'WorkflowExecutionSignaled':
             # Hey! We received a Signal!
 
-            signal_name = last_event['attributes']['signalName']
+            signal_name = last_event['attributes']['signalName'].upper()
             # signal_input = last_event['input']
 
-            if signal_name.upper() == 'ABORT':
+            if signal_name == 'ABORT':
                 # Fail the workflow execution right now
                 self.task.fail('aborted')
 
-            elif signal_name.upper() == 'PRINT':
+            elif signal_name == 'PRINT':
                 # Let's print the Signal input (payload)
                 signal_input = last_event['attributes'].get('input')
                 print("\nThe signal input is: '%s'" % signal_input)
 
-            elif signal_name.upper() == 'STOP':
+            elif signal_name == 'STOP':
                 # Mark this workflow execution as complete
                 workflow_result = '{"success": true}'
                 self.task.add_decision('CompleteWorkflowExecution',
