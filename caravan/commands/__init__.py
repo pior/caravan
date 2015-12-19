@@ -7,14 +7,12 @@ from botocore.exceptions import ClientError
 from caravan.swf import get_connection
 
 
-def is_response_success(response):
-    status_code = response.get('ResponseMetadata', {}).get('HTTPStatusCode')
-    return status_code == 200
+def run_swf_command(command_name, **kwargs):
+    connection = kwargs.get('connection')
+    if connection is None:
+        connection = get_connection()
 
-
-def run_swf_command(command, **kwargs):
-    connection = get_connection()
-    command = getattr(connection, command)
+    command = getattr(connection, command_name)
 
     callargs = {k: v for k, v in kwargs.items() if v is not None}
 
@@ -23,8 +21,9 @@ def run_swf_command(command, **kwargs):
     except ClientError as err:
         sys.exit(err)
     else:
-        if is_response_success(response):
-            response.pop('ResponseMetadata')
+        metadata = response.pop('ResponseMetadata', {})
+        success = metadata.get('HTTPStatusCode') == 200
+        if success:
             return response
         else:
             sys.exit('Error: %s' % response)
