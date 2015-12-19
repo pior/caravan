@@ -40,7 +40,7 @@ class Test(unittest.TestCase):
         self.assertEqual(swf_connection.__class__.__module__, 'botocore.client')
 
     @mock.patch('caravan.commands.decider.register_workflow', autospec=True)
-    @mock.patch('caravan.commands.decider.get_swf_connection', autospec=True)
+    @mock.patch('caravan.commands.decider.get_connection', autospec=True)
     def test_register_workflows(self, m_get_conn, m_register, m_worker_cls):
         m_worker = m_worker_cls.return_value
         m_worker.run.side_effect = KeyboardInterrupt('KILLTEST')

@@ -4,14 +4,7 @@ import sys
 
 import boto3
 from botocore.exceptions import ClientError
-from botocore.client import Config
-
-
-def get_swf_connection():
-    # Must increase the http timeout since SWF has a timeout of 60 sec
-    config = Config(connect_timeout=50, read_timeout=70)
-    connection = boto3.client("swf", config=config)
-    return connection
+from caravan.swf import get_connection
 
 
 def is_response_success(response):
@@ -20,7 +13,7 @@ def is_response_success(response):
 
 
 def run_swf_command(command, **kwargs):
-    connection = get_swf_connection()
+    connection = get_connection()
     command = getattr(connection, command)
 
     callargs = {k: v for k, v in kwargs.items() if v is not None}

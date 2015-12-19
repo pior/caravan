@@ -2,8 +2,8 @@ import logging
 
 from caravan import Workflow
 from caravan.commands.base import BaseCommand
-from caravan.commands import ClassesLoaderFromModule, get_swf_connection
-from caravan.swf import register_workflow
+from caravan.commands import ClassesLoaderFromModule
+from caravan.swf import register_workflow, get_connection
 from caravan.workers.decider import Worker
 
 
@@ -26,7 +26,7 @@ class Command(BaseCommand):
         parser.add_argument('--register-workflows', action='store_true')
 
     def run(self):
-        connection = get_swf_connection()
+        connection = get_connection()
         workflows = [w for module in self.args.modules for w in module]
 
         if self.args.register_workflows:
