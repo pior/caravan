@@ -18,6 +18,7 @@ setup(
         'arrow',
         'six',
         'tabulate',
+        'inflection',
         ],
     extras_require={
         'dev': [
