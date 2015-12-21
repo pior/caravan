@@ -9,12 +9,10 @@ class Demo(Workflow):
 
     name = 'Demo'
     version = '0.1'
-    defaults = {
-        'ExecutionStartToCloseTimeout': '600',
-        'TaskStartToCloseTimeout': '10',
-        'TaskList': 'default',
-        'ChildPolicy': 'TERMINATE',
-        }
+    default_execution_start_to_close_timeout = '600'
+    default_task_start_to_close_timeout = '10'
+    default_task_list = 'default'
+    default_child_policy = 'TERMINATE'
 
     def run(self):
         # For development, you can print the history events

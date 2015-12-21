@@ -14,11 +14,8 @@ class Test(unittest.TestCase):
         self.assertIs(workflow.task, task)
         self.assertEqual(workflow.name, 'Demo')
         self.assertEqual(workflow.version, '0.1')
-        self.assertEqual(workflow.defaults['ExecutionStartToCloseTimeout'],
+        self.assertEqual(workflow.default_execution_start_to_close_timeout,
                          '600')
-        self.assertEqual(workflow.defaults['TaskStartToCloseTimeout'],
-                         '10')
-        self.assertEqual(workflow.defaults['TaskList'],
-                         'default')
-        self.assertEqual(workflow.defaults['ChildPolicy'],
-                         'TERMINATE')
+        self.assertEqual(workflow.default_task_start_to_close_timeout, '10')
+        self.assertEqual(workflow.default_task_list, 'default')
+        self.assertEqual(workflow.default_child_policy, 'TERMINATE')

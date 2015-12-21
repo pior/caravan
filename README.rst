@@ -97,34 +97,56 @@ It also supports profiles::
 Demo
 ====
 
-Setup a SWF for the example::
+Setup a SWF domain to run this example::
 
-    $ caravan-domain-register -n CaravanExample --retention-days 1
+    $ caravan-domain-register -n CaravanDemo --retention-days 1
+
+Write a workflow type (see full demo_)
+
+.. code:: python
+
+    from caravan import Workflow
+
+
+    class Demo(Workflow):
+
+        """Noop workflow using the bare caravan API."""
+
+        name = 'Demo'
+        version = '0.1'
+        default_execution_start_to_close_timeout = '600'
+        default_task_start_to_close_timeout = '10'
+
+        def run(self):
+            self.task.print_events()
+            self.task.add_decision('CompleteWorkflowExecution')
+
+.. _demo: https://github.com/pior/caravan/blob/master/caravan/examples/demo.py
 
 Run the decider with the Demo workflow::
 
-    $ caravan-decider -d CaravanExample -m caravan.examples.demo -t default --verbose
+    $ caravan-decider -d CaravanDemo -m caravan.examples.demo -t default --verbose
 
 Start an execution of the Demo workflow::
 
-    $ caravan-start -d CaravanExample -n Demo -v 0.1 -i 1
+    $ caravan-start -d CaravanDemo -n Demo -v 0.1 -i 1
 
     (The Demo workflow will wait for 5 minutes)
 
 List the executions::
 
-    $ caravan-list -d CaravanExample
-    $ caravan-list -d CaravanExample --oldest 2015-01-01
+    $ caravan-list -d CaravanDemo
+    $ caravan-list -d CaravanDemo --oldest 2015-01-01
 
 Send a signal to an execution::
 
-    $ caravan-signal -d CaravanExample -i 1 -s PRINT --input 'Hello World!'
-    $ caravan-signal -d CaravanExample -i 1 -s PRINT --input 'Lorem ipsum'
-    $ caravan-signal -d CaravanExample -i 1 -s STOP
+    $ caravan-signal -d CaravanDemo -i 1 -s PRINT --input 'Hello World!'
+    $ caravan-signal -d CaravanDemo -i 1 -s PRINT --input 'Lorem ipsum'
+    $ caravan-signal -d CaravanDemo -i 1 -s STOP
 
 Terminate an execution::
 
-    $ caravan-terminate -d CaravanExample -i 1
+    $ caravan-terminate -d CaravanDemo -i 1
 
 Similar projects
 ================

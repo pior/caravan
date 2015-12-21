@@ -27,11 +27,7 @@ REGISTER_WORKFLOW_REQUIRED_PARAMETERS = [
     ]
 
 
-def register_workflow(connection, domain, workflow):
-    """Register a workflow type.
-
-    Return False if this workflow already registered (and True otherwise).
-    """
+def get_workflow_registration_parameter(workflow):
     args = {}
 
     for parameter in REGISTER_WORKFLOW_PARAMETERS:
@@ -45,13 +41,27 @@ def register_workflow(connection, domain, workflow):
                 raise InvalidWorkflowError('missing attribute %s' % attr_name)
 
         else:
-            if attr_name == 'defaultTaskList':
-                attr_value = {'name': attr_value}
+            is_string = isinstance(attr_value, string_types)
+            is_dict = isinstance(attr_value, dict)
 
-            elif not isinstance(attr_value, string_types):
+            if parameter == 'defaultTaskList' and is_string:
+                attr_value = {'name': attr_value}
+            if parameter == 'defaultTaskList' and is_dict:
+                pass
+            elif not is_string:
                 raise InvalidWorkflowError('invalid attribute %s' % attr_name)
 
             args[parameter] = attr_value
+
+    return args
+
+
+def register_workflow(connection, domain, workflow):
+    """Register a workflow type.
+
+    Return False if this workflow already registered (and True otherwise).
+    """
+    args = get_workflow_registration_parameter(workflow)
 
     try:
         connection.register_workflow_type(domain=domain, **args)

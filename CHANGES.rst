@@ -6,6 +6,7 @@ Changelog
 ------------------
 
 - Add a workflow demo (caravan.examples.demo)
+- Changed Workflow api for defaults
 
 
 0.2.1 (2015-12-07)
