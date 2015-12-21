@@ -30,6 +30,7 @@ setup(
             'freezegun',
             'abduct',
             'httpretty == 0.8.10',
+            'moto',
 
             'zest.releaser[recommended]',
             'pylama',

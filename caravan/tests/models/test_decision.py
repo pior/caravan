@@ -19,40 +19,42 @@ class TestException(unittest.TestCase):
         self.assertEqual(exc.details, 'DETAILS')
 
 
+EVENT_EXEC_STARTED_ATTRIBUTES = {
+    "childPolicy": "string",
+    "continuedExecutionRunId": "string",
+    "executionStartToCloseTimeout": "string",
+    "input": "string",
+    "lambdaRole": "string",
+    "parentInitiatedEventId": 1,
+    "parentWorkflowExecution": {
+        "runId": "string",
+        "workflowId": "string"
+    },
+    "tagList": [
+        "string"
+    ],
+    "taskList": {
+        "name": "string"
+    },
+    "taskPriority": "string",
+    "taskStartToCloseTimeout": "string",
+    "workflowType": {
+        "name": "string",
+        "version": "string"
+    },
+}
+
+
 class TestDecisionTask(unittest.TestCase):
 
     @property
     def decision_data(self):
         """Return a new copy of a DecisionTask test payload."""
         decision_data = {
-            "events": [
-                {
-                    "workflowExecutionStartedEventAttributes": {
-                        "childPolicy": "string",
-                        "continuedExecutionRunId": "string",
-                        "executionStartToCloseTimeout": "string",
-                        "input": "string",
-                        "lambdaRole": "string",
-                        "parentInitiatedEventId": 1,
-                        "parentWorkflowExecution": {
-                            "runId": "string",
-                            "workflowId": "string"
-                        },
-                        "tagList": [
-                            "string"
-                        ],
-                        "taskList": {
-                            "name": "string"
-                        },
-                        "taskPriority": "string",
-                        "taskStartToCloseTimeout": "string",
-                        "workflowType": {
-                            "name": "string",
-                            "version": "string"
-                        },
-                    },
-                },
-            ],
+            "events": [{
+                "workflowExecutionStartedEventAttributes":
+                EVENT_EXEC_STARTED_ATTRIBUTES,
+                }],
             "nextPageToken": "NEXT_PAGE_TOKEN",
             "previousStartedEventId": 1,
             "startedEventId": 1,
@@ -60,11 +62,12 @@ class TestDecisionTask(unittest.TestCase):
             "workflowExecution": {
                 "runId": "RID",
                 "workflowId": "WID"
-            },
+                },
             "workflowType": {
                 "name": "NAME",
                 "version": "VERSION"
-            }}
+                },
+            }
         return decision_data
 
     def test_nominal(self):
@@ -73,30 +76,7 @@ class TestDecisionTask(unittest.TestCase):
         task = DecisionTask(self.decision_data)
 
         expected = [{
-            'attributes': {
-                'parentWorkflowExecution': {
-                    'workflowId': 'string',
-                    'runId': 'string'
-                    },
-                'taskStartToCloseTimeout': 'string',
-                'lambdaRole': 'string',
-                'continuedExecutionRunId': 'string',
-                'executionStartToCloseTimeout': 'string',
-                'tagList': [
-                    'string',
-                    ],
-                'taskList': {
-                    'name': 'string',
-                    },
-                'parentInitiatedEventId': 1,
-                'taskPriority': 'string',
-                'childPolicy': 'string',
-                'input': 'string',
-                'workflowType': {
-                    'version': 'string',
-                    'name': 'string'
-                    }
-                }
+            'attributes': EVENT_EXEC_STARTED_ATTRIBUTES
             }]
         self.assertEqual(task.events, expected)
 
