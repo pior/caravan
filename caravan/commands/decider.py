@@ -36,10 +36,11 @@ class Command(BaseCommand):
                                             domain=self.args.domain,
                                             workflow=workflow)
                 if created:
-                    log.info("Workflow type %s: registered.", workflow.name)
+                    log.info("Workflow type %s(%s): registered.",
+                             workflow.name, workflow.version)
                 else:
-                    log.info("Workflow type %s: already registered.",
-                             workflow.name)
+                    log.info("Workflow type %s(%s): already registered.",
+                             workflow.name, workflow.version)
 
         log.info("Start decider worker...")
         worker = Worker(connection=connection,
