@@ -9,8 +9,8 @@ class Demo(Workflow):
 
     name = 'Demo'
     version = '0.1'
-    default_execution_start_to_close_timeout = '600'
-    default_task_start_to_close_timeout = '10'
+    default_execution_start_to_close_timeout = 600
+    default_task_start_to_close_timeout = 10
     default_task_list = 'default'
     default_child_policy = 'TERMINATE'
 

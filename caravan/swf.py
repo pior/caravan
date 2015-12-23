@@ -43,11 +43,14 @@ def get_workflow_registration_parameter(workflow):
         else:
             is_string = isinstance(attr_value, string_types)
             is_dict = isinstance(attr_value, dict)
+            is_int = isinstance(attr_value, int)
 
             if parameter == 'defaultTaskList' and is_string:
                 attr_value = {'name': attr_value}
             if parameter == 'defaultTaskList' and is_dict:
                 pass
+            if parameter.endswith('Timeout') and is_int:
+                attr_value = str(attr_value)
             elif not is_string:
                 raise InvalidWorkflowError('invalid attribute %s' % attr_name)
 

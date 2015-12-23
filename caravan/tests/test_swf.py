@@ -21,29 +21,82 @@ class Test(unittest.TestCase):
         self.assertEqual(swf_connection.meta.config.region_name, 'us-east-1')
         self.assertEqual(swf_connection.meta.service_model.service_name, 'swf')
 
+
+class TestRegisterWorkflow(unittest.TestCase):
+
+    def setUp(self):
+        self.mock_swf = mock_swf()
+        self.mock_swf.start()
+
+        self.connection = get_connection()
+        self.connection.register_domain(
+            name='TEST',
+            workflowExecutionRetentionPeriodInDays='1')
+
+    def tearDown(self):
+        self.mock_swf.stop()
+
+    def _describe_workflow(self, name, version):
+        types = self.connection.describe_workflow_type(
+            domain='TEST',
+            workflowType={'name': name, 'version': version})
+        return types
+
+    def _list_workflows(self):
+        response = self.connection.list_workflow_types(
+            domain='TEST',
+            registrationStatus='REGISTERED')
+        return response['typeInfos']
+
+    def test_example_demo(self):
+        from caravan.examples.demo import Demo
+
+        result = register_workflow(self.connection, 'TEST', Demo)
+        self.assertTrue(result)
+
+        workflow = self._list_workflows()[0]
+        self.assertEqual(workflow['workflowType']['name'], 'Demo')
+
     def test_register_workflow(self):
         class TestWorkflow(object):
             name = 'TestWorkflow'
             version = '1.0'
 
-        connection = get_connection()
-        with mock_swf():
-            connection.register_domain(
-                name='TEST',
-                workflowExecutionRetentionPeriodInDays='1')
+        result = register_workflow(self.connection, 'TEST', TestWorkflow)
+        self.assertTrue(result)
 
-            result = register_workflow(connection, 'TEST', TestWorkflow)
-            self.assertTrue(result)
+        # Moto bug : https://github.com/spulec/moto/issues/495
+        # result = register_workflow(connection, 'TEST', TestWorkflow)
+        # self.assertTrue(result)
 
-            # Moto bug : https://github.com/spulec/moto/issues/495
-            # result = register_workflow(connection, 'TEST', TestWorkflow)
-            # self.assertTrue(result)
+        workflow = self._list_workflows()[0]
+        self.assertEqual(workflow['workflowType']['name'], 'TestWorkflow')
+        self.assertEqual(workflow['workflowType']['version'], '1.0')
 
-            wt = connection.list_workflow_types(domain='TEST',
-                                                registrationStatus='REGISTERED')
-            self.assertEqual(len(wt['typeInfos']), 1)
-            self.assertEqual(wt['typeInfos'][0]['workflowType'],
-                             {'name': 'TestWorkflow', 'version': '1.0'})
+    def test_register_workflow_description(self):
+        class TestWorkflow(object):
+            name = 'TestWorkflow'
+            version = '1.0'
+            description = 'DESC'
+
+        register_workflow(self.connection, 'TEST', TestWorkflow)
+
+        wt = self._describe_workflow('TestWorkflow', '1.0')
+        self.assertEqual(wt['typeInfo']['description'], 'DESC')
+
+    def test_register_workflow_default_timeout(self):
+        class TestWorkflow(object):
+            name = 'TestWorkflow'
+            version = '1.0'
+            default_execution_start_to_close_timeout = 600
+            default_task_start_to_close_timeout = 10
+
+        register_workflow(self.connection, 'TEST', TestWorkflow)
+
+        wt = self._describe_workflow('TestWorkflow', '1.0')
+        config = wt['configuration']
+        self.assertEqual(config['defaultTaskStartToCloseTimeout'], '10')
+        self.assertEqual(config['defaultExecutionStartToCloseTimeout'], '600')
 
 
 class UnittestRegisterWorkflow(unittest.TestCase):
