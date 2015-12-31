@@ -20,7 +20,7 @@ Feedbacks, ideas and contributions are highly welcomed. (Just open a
 - Doc: ``TODO``
 
 .. |travis| image:: https://travis-ci.org/pior/caravan.svg?branch=master
-    :target: https://travis-ci.org/pior/caravan
+   :target: https://travis-ci.org/pior/caravan
 
 .. |coveralls| image:: https://coveralls.io/repos/pior/caravan/badge.svg?branch=master&service=github
    :target: https://coveralls.io/github/pior/caravan?branch=master
@@ -55,8 +55,8 @@ Caravan uses Boto3 to connect to AWS. See
 for the complete documentation.
 
 .. warning::
-    On AWS EC2, the metadata provider only provides the credentials, the
-    must be provided by configuration.
+   On AWS EC2, the metadata provider only provides the credentials, the
+   must be provided by configuration.
 
 Environment Variables
 ---------------------
@@ -78,78 +78,78 @@ Configuration Files
 
 The credentials file is located at ``~/.aws/credentials``::
 
-    [default]
-    # The access key for your AWS account
-    aws_access_key_id=<YOUR ACCESS KEY ID>
+   [default]
+   # The access key for your AWS account
+   aws_access_key_id=<YOUR ACCESS KEY ID>
 
-    # The secret key for your AWS account
-    aws_secret_access_key=<YOUR SECRET KEY>
+   # The secret key for your AWS account
+   aws_secret_access_key=<YOUR SECRET KEY>
 
 The settings file is located at ``~/.aws/config``::
 
-    [default]
-    # The default region when making requests
-    region=<REGION NAME>
+   [default]
+   # The default region when making requests
+   region=<REGION NAME>
 
 It also supports profiles::
 
-    [profile dev-profile]
-    # The default region when using the dev-profile account
-    region=<REGION NAME>
+   [profile dev-profile]
+   # The default region when using the dev-profile account
+   region=<REGION NAME>
 
 Demo
 ====
 
 Setup a SWF domain to run this example::
 
-    $ caravan-domain-register -n CaravanDemo --retention-days 1
+   $ caravan-domain-register -n CaravanDemo --retention-days 1
 
 Write a workflow type (see full demo_)
 
 .. code:: python
 
-    from caravan import Workflow
+   from caravan import Workflow
 
 
-    class Demo(Workflow):
+   class Demo(Workflow):
 
-        """Noop workflow using the bare caravan API."""
+       """Noop workflow using the bare caravan API."""
 
-        name = 'Demo'
-        version = '0.1'
-        default_execution_start_to_close_timeout = '600'
-        default_task_start_to_close_timeout = '10'
+       name = 'Demo'
+       version = '0.1'
+       default_execution_start_to_close_timeout = '600'
+       default_task_start_to_close_timeout = '10'
 
-        def run(self):
-            self.task.print_events()
-            self.task.add_decision('CompleteWorkflowExecution')
+       def run(self):
+           self.task.print_events()
+           self.task.add_decision('CompleteWorkflowExecution')
 
 .. _demo: https://github.com/pior/caravan/blob/master/caravan/examples/demo.py
 
 Run the decider with the Demo workflow::
 
-    $ caravan-decider -d CaravanDemo -m caravan.examples.demo -t default --verbose
+   $ caravan-decider -d CaravanDemo -m caravan.examples.demo -t default --verbose
 
 Start an execution of the Demo workflow::
 
-    $ caravan-start -d CaravanDemo -n Demo -v 0.1 -i 1
+   $ caravan-start -d CaravanDemo -n Demo -v 0.1 -i 1
 
-    (The Demo workflow will wait for 5 minutes)
+   (The Demo workflow will wait for 5 minutes)
 
 List the executions::
 
-    $ caravan-list -d CaravanDemo
-    $ caravan-list -d CaravanDemo --oldest 2015-01-01
+   $ caravan-list -d CaravanDemo
+   $ caravan-list -d CaravanDemo --oldest 2015-01-01
 
 Send a signal to an execution::
 
-    $ caravan-signal -d CaravanDemo -i 1 -s PRINT --input 'Hello World!'
-    $ caravan-signal -d CaravanDemo -i 1 -s PRINT --input 'Lorem ipsum'
-    $ caravan-signal -d CaravanDemo -i 1 -s STOP
+   $ caravan-signal -d CaravanDemo -i 1 -s PRINT --input 'Hello World!'
+   $ caravan-signal -d CaravanDemo -i 1 -s PRINT --input 'Lorem ipsum'
+   $ caravan-signal -d CaravanDemo -i 1 -s STOP
 
 Terminate an execution::
 
-    $ caravan-terminate -d CaravanDemo -i 1
+   $ caravan-terminate -d CaravanDemo -i 1
 
 Similar projects
 ================
@@ -176,28 +176,28 @@ Development
 Possibly use `virtualenvwrapper <https://virtualenvwrapper.readthedocs.org/en/latest/>`_
 to manage your virtualenvs.
 
-    $ mkvirtualenv caravan
+   $ mkvirtualenv caravan
 
-    or
+   or
 
-    $ virtualenv caravan
+   $ virtualenv caravan
 
 Clone and install development dependencies::
 
-    (caravan)$ git clone git@github.com:pior/caravan.git
-    (caravan)$ cd caravan
-    (caravan)$ pip install -e .[dev]
+   (caravan)$ git clone git@github.com:pior/caravan.git
+   (caravan)$ cd caravan
+   (caravan)$ pip install -e .[dev]
 
 Run tests::
 
-    (caravan)$ nosetests
+   (caravan)$ nosetests
 
 Release
 =======
 
 The release process use zest.releaser::
 
-    $ fullrelease
+   $ fullrelease
 
 License
 =======
