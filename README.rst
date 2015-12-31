@@ -16,11 +16,14 @@ Feedbacks, ideas and contributions are highly welcomed. (Just open a
 
 - `Code on Github <https://github.com/pior/caravan>`_
 - `PyPi <https://pypi.python.org/pypi/caravan>`_
-- `Tests <https://travis-ci.org/pior/caravan>`_ |travis|
+- `Tests <https://travis-ci.org/pior/caravan>`_ |travis| |coveralls|
 - Doc: ``TODO``
 
 .. |travis| image:: https://travis-ci.org/pior/caravan.svg?branch=master
     :target: https://travis-ci.org/pior/caravan
+
+.. |coveralls| image:: https://coveralls.io/repos/pior/caravan/badge.svg?branch=master&service=github
+   :target: https://coveralls.io/github/pior/caravan?branch=master
 
 Focus of this project
 =====================
