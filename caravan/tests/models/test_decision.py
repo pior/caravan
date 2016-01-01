@@ -4,13 +4,13 @@ import unittest
 class TestException(unittest.TestCase):
 
     def test_decision_done(self):
-        from caravan.models.decision import DecisionDone
+        from caravan.models.decision_task import DecisionDone
 
         exc = DecisionDone('STUFF')
         self.assertEqual(str(exc), 'STUFF')
 
     def test_workflow_failure(self):
-        from caravan.models.decision import WorkflowFailure
+        from caravan.models.decision_task import WorkflowFailure
 
         exc = WorkflowFailure('REASON', 'DETAILS')
 
@@ -71,7 +71,7 @@ class TestDecisionTask(unittest.TestCase):
         return decision_data
 
     def test_nominal(self):
-        from caravan.models.decision import DecisionTask
+        from caravan.models.decision_task import DecisionTask
 
         task = DecisionTask(self.decision_data)
 
@@ -89,7 +89,7 @@ class TestDecisionTask(unittest.TestCase):
         self.assertEqual(task.decisions, [])
 
     def test_repr(self):
-        from caravan.models.decision import DecisionTask
+        from caravan.models.decision_task import DecisionTask
 
         task = DecisionTask(self.decision_data)
         self.assertEqual(repr(task),

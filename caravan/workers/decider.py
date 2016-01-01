@@ -3,7 +3,9 @@ import logging
 from botocore.exceptions import ClientError
 
 from caravan.workers import get_default_identity
-from caravan.models.decision import DecisionTask, DecisionDone, WorkflowFailure
+from caravan.models.decision_task import (DecisionTask,
+                                          DecisionDone,
+                                          WorkflowFailure)
 
 log = logging.getLogger(__name__)
 
@@ -14,7 +16,7 @@ class Worker(object):
         self.conn = connection
         self.domain = domain
         self.task_list = task_list
-        self.Workflows = {(w.name, w.version): w for w in workflows}
+        self.workflows = dict(((w.name, w.version), w) for w in workflows)
         self.identity = get_default_identity()
 
     def run(self):
@@ -47,7 +49,7 @@ class Worker(object):
     def run_task(self, task):
         log.info('Got a %r', task)
         workflow_key = (task.workflow_type, task.workflow_version)
-        workflow_class = self.Workflows.get(workflow_key)
+        workflow_class = self.workflows.get(workflow_key)
 
         if not workflow_class:
             log.warning('Unknown workflow %s', task)
