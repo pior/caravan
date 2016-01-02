@@ -2,15 +2,13 @@ import unittest
 
 import mock
 
-import caravan
 from caravan.tests import fixtures
-from caravan.tests.util import mock_args
-from caravan.commands.decider import Command
-from caravan.commands.decider import ClassesLoaderFromModule
+from caravan.tests.util import TestUtilMixin
+from caravan.commands.activity import Command
 
 
-@mock.patch('caravan.commands.decider.Worker')
-class Test(unittest.TestCase):
+@mock.patch('caravan.commands.activity.Worker')
+class Test(TestUtilMixin, unittest.TestCase):
 
     def test_nominal(self, m_worker_cls):
         m_worker = m_worker_cls.return_value
@@ -20,7 +18,7 @@ class Test(unittest.TestCase):
             '-d', 'DOMAIN', '-m', 'caravan.tests.fixtures', '-t', 'TASKLIST',
             ]
 
-        with mock_args(args):
+        with self.mock_args(args):
             with self.assertRaises(SystemExit) as exc:
                 Command.main()
 
@@ -31,16 +29,13 @@ class Test(unittest.TestCase):
         self.assertEqual(kwargs['domain'], 'DOMAIN')
         self.assertEqual(kwargs['task_list'], 'TASKLIST')
         self.assertEqual(kwargs['entities'],
-                         [fixtures.TestWorkflow1, fixtures.TestWorkflow2])
+                         [fixtures.TestActivity1, fixtures.TestActivity2])
 
-        # Boto3 client object are dynamically forged...
-        swf_connection = kwargs['connection']
-        self.assertEqual(swf_connection.__class__.__name__, 'SWF')
-        self.assertEqual(swf_connection.__class__.__module__, 'botocore.client')
+        self.assertIsSwfConnection(kwargs['connection'])
 
-    @mock.patch('caravan.commands.decider.register_workflow', autospec=True)
-    @mock.patch('caravan.commands.decider.get_connection', autospec=True)
-    def test_register_workflows(self, m_get_conn, m_register, m_worker_cls):
+    @mock.patch('caravan.commands.activity.register_activity', autospec=True)
+    @mock.patch('caravan.commands.activity.get_connection', autospec=True)
+    def test_register_activities(self, m_get_conn, m_register, m_worker_cls):
         m_worker = m_worker_cls.return_value
         m_worker.run.side_effect = KeyboardInterrupt('KILLTEST')
 
@@ -48,28 +43,19 @@ class Test(unittest.TestCase):
 
         args = [
             '-d', 'DOMAIN', '-m', 'caravan.tests.fixtures', '-t', 'TASKLIST',
-            '--register-workflows',
+            '--register-activities',
             ]
 
-        with mock_args(args):
+        with self.mock_args(args):
             with self.assertRaises(SystemExit):
                 Command.main()
 
         expected = [
             mock.call(connection=m_conn,
                       domain='DOMAIN',
-                      workflow=fixtures.TestWorkflow1),
+                      activity=fixtures.TestActivity1),
             mock.call(connection=m_conn,
                       domain='DOMAIN',
-                      workflow=fixtures.TestWorkflow2),
+                      activity=fixtures.TestActivity2),
             ]
         self.assertEqual(m_register.call_args_list, expected)
-
-
-class TestClassLoader(unittest.TestCase):
-
-    def test_nominal(self):
-        loader = ClassesLoaderFromModule(caravan.Workflow)
-        result = loader('caravan.tests.fixtures')
-        self.assertEqual(
-            result, [fixtures.TestWorkflow1, fixtures.TestWorkflow2])

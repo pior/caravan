@@ -15,7 +15,7 @@ Feedbacks, ideas and contributions are highly welcomed. (Just open a
 `Github issue <https://github.com/pior/caravan/issues>`_).
 
 - `Code on Github <https://github.com/pior/caravan>`_
-- `PyPi <https://pypi.python.org/pypi/caravan>`_
+- `PyPI <https://pypi.python.org/pypi/caravan>`_
 - `Tests <https://travis-ci.org/pior/caravan>`_ |travis| |coveralls|
 - Doc: ``TODO``
 
@@ -42,7 +42,7 @@ Features
 ========
 
 - Decider worker
-- Activity task worker ``TODO``
+- Activity task worker
 - Commands to start/signal/terminate an arbitrary workflow execution
 - Command to list open workflow execution
 - Command to register a domain / list domains

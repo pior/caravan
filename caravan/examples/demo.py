@@ -1,9 +1,10 @@
 from __future__ import print_function
+import time
 
-from caravan import Workflow
+from caravan import Workflow, Activity
 
 
-class Demo(Workflow):
+class DemoWorkflow(Workflow):
 
     """Demo workflow using the bare caravan API."""
 
@@ -58,9 +59,43 @@ class Demo(Workflow):
                 self.task.add_decision('CompleteWorkflowExecution',
                                        result=workflow_result)
 
+            elif signal_name == 'ACTIVITY':
+                # Schedule a demo activity
+                activity_type = {
+                    'name': DemoActivity.name,
+                    'version': DemoActivity.version,
+                    }
+                activity_id = str(time.time())
+                self.task.add_decision('ScheduleActivityTask',
+                                       activityType=activity_type,
+                                       activityId=activity_id,
+                                       input='"DemoInput"')
+
             else:
                 print("Unknown signal '%s'" % signal_name)
                 self.task.decision_done(msg='JustIgnoringThisUnknownSignal')
 
         else:
-            self.task.fail('unknown_event_type')
+            print('Unknown last event type')
+
+
+class DemoActivity(Activity):
+
+    name = 'DemoActivity'
+    version = '0.1.2'
+
+    default_task_list = 'default'
+
+    default_task_start_to_close_timeout = 60
+    default_task_schedule_to_start_timeout = 10
+    default_task_schedule_to_close_timeout = 70
+    default_task_heartbeat_timeout = 'NONE'
+
+    def run(self, input):
+        print('Received input: %s' % input)
+        self.do_stuff()
+        return {'input': input, 'output': 'YO'}
+
+    def do_stuff(self):
+        print('Doing stuff (waiting 3 secs)')
+        time.sleep(2)

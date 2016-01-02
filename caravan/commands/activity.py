@@ -1,52 +1,51 @@
 import logging
 
-from caravan import Workflow
+from caravan import Activity
 from caravan.commands.base import BaseCommand
 from caravan.commands import ClassesLoaderFromModule
-from caravan.swf import register_workflow, get_connection
-from caravan.workers.decider import Worker
-
+from caravan.swf import register_activity, get_connection
+from caravan.workers.activity import Worker
 
 log = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
 
-    description = 'Decider worker'
+    description = 'Activity worker'
 
     def setup_arguments(self, parser):
         parser.add_argument('-m', '--modules',
-                            type=ClassesLoaderFromModule(Workflow),
+                            type=ClassesLoaderFromModule(Activity),
                             nargs='+',
                             required=True)
         parser.add_argument('-d', '--domain',
                             required=True)
         parser.add_argument('-t', '--task-list',
                             required=True)
-        parser.add_argument('--register-workflows', action='store_true')
+        parser.add_argument('--register-activities', action='store_true')
 
     def run(self):
         connection = get_connection()
-        workflows = [w for module in self.args.modules for w in module]
+        activities = [a for module in self.args.modules for a in module]
 
-        if self.args.register_workflows:
-            log.info("Registering workflow types")
-            for workflow in workflows:
-                created = register_workflow(connection=connection,
+        if self.args.register_activities:
+            log.info("Registering activity types")
+            for activity in activities:
+                created = register_activity(connection=connection,
                                             domain=self.args.domain,
-                                            workflow=workflow)
+                                            activity=activity)
                 if created:
-                    log.info("Workflow type %s(%s): registered.",
-                             workflow.name, workflow.version)
+                    log.info("Activity type %s(%s): registered.",
+                             activity.name, activity.version)
                 else:
-                    log.info("Workflow type %s(%s): already registered.",
-                             workflow.name, workflow.version)
+                    log.info("Activity type %s(%s): already registered.",
+                             activity.name, activity.version)
 
-        log.info("Start decider worker...")
+        log.info("Start activity worker...")
         worker = Worker(connection=connection,
                         domain=self.args.domain,
                         task_list=self.args.task_list,
-                        entities=workflows)
+                        entities=activities)
 
         while True:
             try:

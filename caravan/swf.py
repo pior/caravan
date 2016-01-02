@@ -9,32 +9,14 @@ class InvalidWorkflowError(Exception):
     pass
 
 
-REGISTER_WORKFLOW_PARAMETERS = [
-    'name',
-    'version',
-    'description',
-    'defaultTaskStartToCloseTimeout',
-    'defaultExecutionStartToCloseTimeout',
-    'defaultTaskList',
-    'defaultTaskPriority',
-    'defaultChildPolicy',
-    'defaultLambdaRole',
-    ]
+def get_swf_parameters(workflow, parameters):
+    param_dict = {}
 
-REGISTER_WORKFLOW_REQUIRED_PARAMETERS = [
-    'name',
-    'version',
-    ]
-
-
-def get_workflow_registration_parameter(workflow):
-    args = {}
-
-    for parameter in REGISTER_WORKFLOW_PARAMETERS:
+    for parameter in parameters:
         attr_name = inflection.underscore(parameter)
         attr_value = getattr(workflow, attr_name, None)
 
-        required = attr_name in REGISTER_WORKFLOW_REQUIRED_PARAMETERS
+        required = attr_name in ['name', 'version']
 
         if attr_value is None:
             if required:
@@ -54,9 +36,22 @@ def get_workflow_registration_parameter(workflow):
             elif not is_string:
                 raise InvalidWorkflowError('invalid attribute %s' % attr_name)
 
-            args[parameter] = attr_value
+            param_dict[parameter] = attr_value
 
-    return args
+    return param_dict
+
+
+WORKFLOW_PARAMETERS = [
+    'name',
+    'version',
+    'description',
+    'defaultTaskStartToCloseTimeout',
+    'defaultExecutionStartToCloseTimeout',
+    'defaultTaskList',
+    'defaultTaskPriority',
+    'defaultChildPolicy',
+    'defaultLambdaRole',
+    ]
 
 
 def register_workflow(connection, domain, workflow):
@@ -64,7 +59,7 @@ def register_workflow(connection, domain, workflow):
 
     Return False if this workflow already registered (and True otherwise).
     """
-    args = get_workflow_registration_parameter(workflow)
+    args = get_swf_parameters(workflow, WORKFLOW_PARAMETERS)
 
     try:
         connection.register_workflow_type(domain=domain, **args)
@@ -76,8 +71,38 @@ def register_workflow(connection, domain, workflow):
     return True
 
 
+ACTIVITY_PARAMETERS = [
+    'name',
+    'version',
+    'description',
+    'defaultTaskStartToCloseTimeout',
+    'defaultTaskHeartbeatTimeout',
+    'defaultTaskList',
+    'defaultTaskPriority',
+    'defaultTaskScheduleToStartTimeout',
+    'defaultTaskScheduleToCloseTimeout',
+    ]
+
+
+def register_activity(connection, domain, activity):
+    """Register an activity type.
+
+    Return False if this activity already registered (and True otherwise).
+    """
+    args = get_swf_parameters(activity, ACTIVITY_PARAMETERS)
+
+    try:
+        connection.register_activity_type(domain=domain, **args)
+    except ClientError as err:
+        if err.response['Error']['Code'] == 'TypeAlreadyExistsFault':
+            return False  # Ignore this error
+        raise
+
+    return True
+
+
 def get_connection():
-    # Must increase the http timeout since SWF has a timeout of 60 sec
+    """Create and return a Boto3 connection for SWF (with read_timeout=70)."""
     config = Config(connect_timeout=50, read_timeout=70)
     connection = boto3.client("swf", config=config)
     return connection

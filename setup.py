@@ -31,6 +31,7 @@ setup(
             'abduct',
             'httpretty == 0.8.10',
             'moto',
+            'nose-parameterized',
 
             'zest.releaser[recommended]',
             'pylama',
@@ -39,6 +40,7 @@ setup(
     entry_points={
         'console_scripts': [
             'caravan-decider = caravan.commands.decider:Command.main',
+            'caravan-activity = caravan.commands.activity:Command.main',
             'caravan-start = caravan.commands.start:Command.main',
             'caravan-signal = caravan.commands.signal:Command.main',
             'caravan-terminate = caravan.commands.terminate:Command.main',

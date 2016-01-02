@@ -2,7 +2,7 @@ import logging
 
 from botocore.exceptions import ClientError
 
-from caravan.workers import get_default_identity
+from caravan.workers import BaseWorker
 from caravan.models.decision_task import (DecisionTask,
                                           DecisionDone,
                                           WorkflowFailure)
@@ -10,24 +10,10 @@ from caravan.models.decision_task import (DecisionTask,
 log = logging.getLogger(__name__)
 
 
-class Worker(object):
-
-    def __init__(self, connection, domain, task_list, workflows):
-        self.conn = connection
-        self.domain = domain
-        self.task_list = task_list
-        self.workflows = dict(((w.name, w.version), w) for w in workflows)
-        self.identity = get_default_identity()
-
-    def run(self):
-        log.info('Waiting for a decision task...')
-        task = self.poll()
-        if task:
-            self.run_task(task)
+class Worker(BaseWorker):
 
     def poll(self):
-        task_list = dict(name=self.task_list)
-
+        task_list = {'name': self.task_list}
         resp = self.conn.poll_for_decision_task(domain=self.domain,
                                                 taskList=task_list,
                                                 identity=self.identity)
@@ -35,21 +21,21 @@ class Worker(object):
             return  # Polling timed out.
 
         next_page_token = resp.get('nextPageToken')
+
         while next_page_token:
             page = self.conn.poll_for_decision_task(
                 domain=self.domain,
                 taskList=task_list,
                 identity=self.identity,
                 nextPageToken=next_page_token)
-            next_page_token = page.get('nextPageToken')
             resp['events'].extend(page['events'])
+            next_page_token = page.get('nextPageToken')
 
         return DecisionTask(resp)
 
     def run_task(self, task):
-        log.info('Got a %r', task)
         workflow_key = (task.workflow_type, task.workflow_version)
-        workflow_class = self.workflows.get(workflow_key)
+        workflow_class = self.entities.get(workflow_key)
 
         if not workflow_class:
             log.warning('Unknown workflow %s', task)

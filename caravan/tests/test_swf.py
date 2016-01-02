@@ -3,9 +3,7 @@ import unittest
 import mock
 from moto import mock_swf
 
-from caravan.swf import (get_workflow_registration_parameter,
-                         register_workflow,
-                         get_connection)
+from caravan.swf import register_workflow, get_connection
 
 
 class Test(unittest.TestCase):
@@ -49,9 +47,9 @@ class TestRegisterWorkflow(unittest.TestCase):
         return response['typeInfos']
 
     def test_example_demo(self):
-        from caravan.examples.demo import Demo
+        from caravan.examples.demo import DemoWorkflow
 
-        result = register_workflow(self.connection, 'TEST', Demo)
+        result = register_workflow(self.connection, 'TEST', DemoWorkflow)
         self.assertTrue(result)
 
         workflow = self._list_workflows()[0]

@@ -18,3 +18,14 @@ class InTempDir(object):
 
 def mock_args(args):
     return mock.patch('sys.argv', ['PROG'] + args)
+
+
+class TestUtilMixin(object):
+
+    def assertIsSwfConnection(self, obj):
+        # Boto3 client object are dynamically built type...
+        self.assertEqual(obj.__class__.__name__, 'SWF')
+        self.assertEqual(obj.__class__.__module__, 'botocore.client')
+
+    def mock_args(self, args):
+        return mock.patch('sys.argv', ['PROG'] + args)
